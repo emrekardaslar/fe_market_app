@@ -1,4 +1,4 @@
-import type { MetaFunction } from "@remix-run/node";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -6,9 +6,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import { Footer } from "antd/lib/layout/layout";
 import { CartProvider } from "./context/CartContext";
+import { getEnv } from "./env.server";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -25,7 +27,14 @@ export function links() {
   ]
 }
 
+export const loader: LoaderFunction = async ({ request }) => {
+  return json({
+    ENV: getEnv(),
+  })
+}
+
 export default function App() {
+  const data = useLoaderData();
   return (
     <html lang="en">
       <head>
@@ -38,6 +47,7 @@ export default function App() {
           <Footer style={{ textAlign: 'center', position: "relative", bottom: "0px", width: "100%" }}>Market App ©2022 Created by emrekardaslar</Footer>
           <ScrollRestoration />
           <Scripts />
+          <script dangerouslySetInnerHTML={{__html: `window.ENV=${JSON.stringify(data.ENV)}`}}></script>
           <LiveReload />
         </CartProvider>
       </body>

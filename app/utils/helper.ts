@@ -31,3 +31,14 @@ export const getTotalPrice = (items: any) => {
 export function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export function getEnvVariable(key: string) {
+    if (typeof window == "undefined") {
+        //SSR
+        return process.env.API_URL;
+    }
+    else {
+        //CSR
+        return window.ENV[key];
+    }
+}
