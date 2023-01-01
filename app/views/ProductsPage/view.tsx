@@ -2,7 +2,7 @@ import { useNavigate } from '@remix-run/react';
 import { Hpl } from 'emrekardaslar-uikit';
 import useViewModel from "./viewModel"
 
-function ProductView({data}: any) {
+function ProductsView({data}: any) {
     const navigate = useNavigate();
     const { getObject, navigateToProduct } = useViewModel();
     let products = data.products.results;
@@ -23,4 +23,4 @@ function ProductView({data}: any) {
     )
 }
 
-export default ProductView
+export default ProductsView

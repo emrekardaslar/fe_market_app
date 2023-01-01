@@ -5,15 +5,19 @@ import ProductPage from '~/components/ProductPage';
 import { getUserId } from '~/services/sesssion.server';
 import { db } from '~/utils/db.server';
 import { capitalizeFirstLetter } from '~/utils/helper';
+import useViewModel from "~/views/ProductsPage/viewModel";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
-    const product = await db.product.findFirst({
+    const { getProduct } = useViewModel();
+    let product = await getProduct(params.id);
+    product = product.results[0];
+    /* await db.product.findFirst({
         where: {
             id: params.id
         }
-    })
+    }) */
 
-    let comments = await db.comment.findMany({
+    let comments = []/* await db.comment.findMany({
         where: {
             productId: product.id
         },
@@ -31,7 +35,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         orderBy: {
             createdAt: 'desc'
         }
-    })
+    }) */
 
     let userId = await getUserId(request);
     let user = null;
@@ -53,18 +57,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         comment.datetime = moment(comment.createdAt).fromNow()
     })
 
-    const rating = await db.rating.findMany({
+    const rating = []/* await db.rating.findMany({
         where: {
             productId: product?.id
         }
-    })
+    }) */
 
-    const favoriteList = await db.favoriteList.findMany({
+    const favoriteList = []/* await db.favoriteList.findMany({
         where: {
             productId: product?.id,
             userId: user?.id
         }
-    })
+    }) */
 
     return { product: product, comments: comments, user: user, rating: rating, favoriteList: favoriteList }
 };

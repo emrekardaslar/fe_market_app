@@ -1,6 +1,6 @@
 import { getProductsRepo, getCategoryNamesRepo, getProductWithCategoryRepo, getProductWithId } from "~/repository/generalRepository";
 
-export default function ProductViewModel () {
+export default function ProductsViewModel () {
 
     async function getProducts() {
         return await getProductsRepo();

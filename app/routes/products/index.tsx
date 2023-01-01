@@ -1,7 +1,7 @@
 import { LoaderFunction } from "@remix-run/node"
 import { Outlet, useLoaderData } from "@remix-run/react"
-import ProductView from "~/views/ProductPage/view"
-import useViewModel from "~/views/ProductPage/viewModel";
+import ProductsView from "~/views/ProductsPage/view"
+import useViewModel from "~/views/ProductsPage/viewModel";
 
 export let loader: LoaderFunction = async () => {
   const { getProducts, getCategoryNames } = useViewModel();
@@ -15,7 +15,7 @@ function Products() {
 
   return (
     <>
-      <ProductView data={data} />
+      <ProductsView data={data} />
       <Outlet />
     </>
   )

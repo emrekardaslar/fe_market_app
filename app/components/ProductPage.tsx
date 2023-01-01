@@ -103,7 +103,7 @@ function ProductPage({ product, comments, user, favoriteList }: ProductPageProps
                     </>
                 } imageLinks={[
                     product.imgLink,
-                    ...product.imgList
+                    /* ...product.imgList */
                 ]} 
                 imageAlt = {product.name}
                 />

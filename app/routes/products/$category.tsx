@@ -1,7 +1,7 @@
 import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { Hpl } from "emrekardaslar-uikit";
-import useViewModel from "~/views/ProductPage/viewModel";
+import useViewModel from "~/views/ProductsPage/viewModel";
 
 export let loader: LoaderFunction = async ({ params }) => {
     const category: any = params.category
