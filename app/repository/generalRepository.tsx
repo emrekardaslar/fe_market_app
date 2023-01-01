@@ -24,3 +24,13 @@ export async function getProductWithCategoryRepo(category: string) {
     });
     return res.data;
 }
+
+export async function getProductWithId(id: string) {
+    const API_BASE_URL = getEnvVariable("API_URL")
+    const res = await axios.get(API_BASE_URL + "/product", {
+        params: {
+            id: id
+        }
+    })
+    return res.data;
+}
