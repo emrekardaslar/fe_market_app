@@ -15,12 +15,12 @@ export let loader: LoaderFunction = async ({ params }) => {
 function Category() {
     const data = useLoaderData()
     const navigate = useNavigate();
-    const { clickHandler } = useViewModel();
+    const { navigateToProductFromSubCategory } = useViewModel();
 
     return (
         <>
             <h1 style={{ fontWeight: "bold", textTransform: "capitalize", marginLeft: "0.3rem" }}>{data.category}</h1>
-            <Hpl products={data.products} onClick={(product)=>clickHandler(product, navigate)} button={true} />
+            <Hpl products={data.products} onClick={(product)=>navigateToProductFromSubCategory(product, navigate)} button={true} />
         </>
     )
 }

@@ -14,8 +14,12 @@ export default function ProductViewModel () {
         return await getProductWithCategoryRepo(category);
     }
 
-    function clickHandler(product: any, navigate: any) {
+    function navigateToProduct(product: any, navigate: any) {
         navigate(`${product.category}/${product.subcategory}/${product.id}`)
+    }
+
+    function navigateToProductFromSubCategory(product: any, navigate: any) {
+        navigate(`${product.subcategory}/${product.id}`)
     }
 
     function getObject(products: any, names: any) {
@@ -34,6 +38,7 @@ export default function ProductViewModel () {
         getProducts,
         getCategoryNames,
         getProductsWithCategory,
-        clickHandler
+        navigateToProduct,
+        navigateToProductFromSubCategory
     }
 }

@@ -4,7 +4,7 @@ import useViewModel from "./viewModel"
 
 function ProductView({data}: any) {
     const navigate = useNavigate();
-    const { getObject, clickHandler } = useViewModel();
+    const { getObject, navigateToProduct } = useViewModel();
     let products = data.products.results;
     let keys= data.categoryNames;
     let productsObject = getObject(products, keys);
@@ -15,7 +15,7 @@ function ProductView({data}: any) {
             (
                 <>
                     <h1 style={{ fontWeight: "bold", textTransform: "capitalize", marginLeft: "0.3rem" }}>{key}</h1>
-                    <Hpl products={productsObject[key]} onClick={(product)=>clickHandler(product, navigate)} button={true} />
+                    <Hpl products={productsObject[key]} onClick={(product)=>navigateToProduct(product, navigate)} button={true} />
                 </>
             )
             )}
