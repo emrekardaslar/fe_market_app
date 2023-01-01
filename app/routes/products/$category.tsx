@@ -1,19 +1,13 @@
-import { Product } from "@prisma/client";
 import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import { Hpl } from "emrekardaslar-uikit";
-import { db } from "~/utils/db.server";
+import useViewModel from "~/views/ProductPage/viewModel";
 
-export let loader: LoaderFunction = async ({ request, params }) => {
-    const category = params.category;
-    let products = await db.product.findMany(
-        {
-            where: {
-                category: category
-            }
-        }
-    );
-
+export let loader: LoaderFunction = async ({ params }) => {
+    const category: any = params.category
+    const { getProductsWithCategory } = useViewModel();
+    const res = await getProductsWithCategory(category);
+    let products = res.results;
     return { products, category }
 }
 
@@ -21,14 +15,12 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 function Category() {
     const data = useLoaderData()
     const navigate = useNavigate();
-    const clickHandler = (product: Product) => {
-        navigate(`${product.subCategory}/${product.id}`)
-    }
+    const { clickHandler } = useViewModel();
 
     return (
         <>
             <h1 style={{ fontWeight: "bold", textTransform: "capitalize", marginLeft: "0.3rem" }}>{data.category}</h1>
-            <Hpl products={data.products} onClick={clickHandler} button={true} />
+            <Hpl products={data.products} onClick={(product)=>clickHandler(product, navigate)} button={true} />
         </>
     )
 }
