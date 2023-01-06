@@ -1,5 +1,6 @@
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { notification } from "antd";
+import { getFavoriteListRepo } from "~/repository/favoritesRepository";
 
 export default function FavoritesViewModel () {
     const fetcher = useFetcher();
@@ -23,8 +24,13 @@ export default function FavoritesViewModel () {
         )
     }
 
+    async function getFavoriteList() {
+        return await getFavoriteListRepo()
+    }
+
     return {
         cartAddedNotification,
-        removeFromFavorites
+        removeFromFavorites,
+        getFavoriteList
     }
 }

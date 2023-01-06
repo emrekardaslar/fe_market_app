@@ -7,18 +7,37 @@ import useViewModel from "./viewModel";
 import { getHeaderItems } from "~/utils/helper";
 import Meta from 'antd/lib/card/Meta'
 import headerItems from "../../mock/headerItems"
+import { useEffect, useState } from 'react';
+import useLoginViewModel from "../LoginPage/viewModel";
 
 function FavoritesView({data}: any) {
-    const { cartAddedNotification, removeFromFavorites } = useViewModel();
+    const { cartAddedNotification, removeFromFavorites, getFavoriteList } = useViewModel();
     const { increaseCartQuantity } = useShoppingCart()
+    const { getUserData } = useLoginViewModel();
+    const [user, setUser] = useState("");
+    const [favorites, setFavorites] = useState([]);
     let items = getHeaderItems(data, headerItems)
+
+    useEffect(()=>{
+        async function getUser() {
+            const token = await getUserData();
+            if (!token) window.location.href = "/login"
+            else {
+                setUser(user)
+                const favoriteList = await getFavoriteList();
+                console.log(favoriteList.results)
+                setFavorites(favoriteList.results)
+            }
+        }
+        getUser();
+    }, [])
     
     return (
         <>
             <HeaderC items={items} selectedKey='Favorite List' />
             <Outlet />
             <br></br>
-            <Row key={Math.random()} gutter={16}>
+            <Row key={Math.random()} gutter={16}>           
                 {data.favoriteList.map((item: any) => (
                     <>
                         <div className="site-card-wrapper">
