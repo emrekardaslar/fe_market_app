@@ -1,6 +1,7 @@
 import { useFetcher, useNavigate } from "@remix-run/react";
 import { notification } from "antd";
 import { getFavoriteListRepo } from "~/repository/favoritesRepository";
+import { getProductWithId } from "~/repository/generalRepository";
 
 export default function FavoritesViewModel () {
     const fetcher = useFetcher();
@@ -25,7 +26,11 @@ export default function FavoritesViewModel () {
     }
 
     async function getFavoriteList() {
-        return await getFavoriteListRepo()
+        const favorites = await getFavoriteListRepo();
+        const list: any = [];
+        favorites.forEach((item: any) => list.push(item.product))
+
+        //getProductWithId(item.product)
     }
 
     return {

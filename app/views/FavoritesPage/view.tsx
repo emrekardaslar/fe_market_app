@@ -14,7 +14,7 @@ function FavoritesView({data}: any) {
     const { cartAddedNotification, removeFromFavorites, getFavoriteList } = useViewModel();
     const { increaseCartQuantity } = useShoppingCart()
     const { getUserData } = useLoginViewModel();
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState(null);
     const [favorites, setFavorites] = useState([]);
     let items = getHeaderItems(data, headerItems)
 
@@ -23,7 +23,8 @@ function FavoritesView({data}: any) {
             const token = await getUserData();
             if (!token) window.location.href = "/login"
             else {
-                setUser(user)
+                setUser(token)
+                console.log(token)
                 const favoriteList = await getFavoriteList();
                 console.log(favoriteList.results)
                 setFavorites(favoriteList.results)
@@ -37,8 +38,8 @@ function FavoritesView({data}: any) {
             <HeaderC items={items} selectedKey='Favorite List' />
             <Outlet />
             <br></br>
-            <Row key={Math.random()} gutter={16}>           
-                {data.favoriteList.map((item: any) => (
+            {user !=null && <Row key={Math.random()} gutter={16}>           
+                {favorites.map((item: any) => (
                     <>
                         <div className="site-card-wrapper">
                             <Col span={6}>
@@ -58,7 +59,7 @@ function FavoritesView({data}: any) {
                         </div>
                     </>
                 ))}
-            </Row>
+            </Row>}
         </>
     )
 }
