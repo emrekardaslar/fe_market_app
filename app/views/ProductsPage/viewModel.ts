@@ -1,4 +1,4 @@
-import { getProductsRepo, getCategoryNamesRepo, getProductWithCategoryRepo, getProductWithId } from "~/repository/generalRepository";
+import { getProductsRepo, getCategoryNamesRepo, getProductWithCategoryRepo, getProductWithId, getProductsWithSubCategoryRepo } from "~/repository/generalRepository";
 
 export default function ProductsViewModel () {
 
@@ -12,6 +12,10 @@ export default function ProductsViewModel () {
 
     async function getProductsWithCategory(category: string) {
         return await getProductWithCategoryRepo(category);
+    }
+
+    async function getProductsWithSubCategory(subcategory: string) {
+        return await getProductsWithSubCategoryRepo(subcategory);
     }
 
     async function getProduct(id: string) {
@@ -44,6 +48,7 @@ export default function ProductsViewModel () {
         getProductsWithCategory,
         getProduct,
         navigateToProduct,
-        navigateToProductFromSubCategory
+        navigateToProductFromSubCategory,
+        getProductsWithSubCategory
     }
 }

@@ -4,38 +4,21 @@ import CategoryPage from '~/components/CategoryPage'
 import { getUserId } from '~/services/sesssion.server'
 import { db } from '~/utils/db.server'
 import { capitalizeFirstLetter } from '~/utils/helper'
+import useViewModel from "../../views/ProductsPage/viewModel";
 
-
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: any) => {
     let userId = await getUserId(request);
-    const favoriteList = await db.favoriteList.findMany({
-        where: {
-            userId: userId,
-        }
-    }) 
-
-    let products =  await db.product.findMany(
-        {
-            where: {
-                subCategory: params.subcategory,
-            }
-        }
-    )
-
-   let list: any = [];
-
-   products.forEach(product => {
-    favoriteList.forEach(item => {
-        item.productId == product.id && list.push(product)
-    })
-   })
-
-    return {products, list, userId}
+    const { getProductsWithSubCategory } = useViewModel();
+    const res = await getProductsWithSubCategory(params.subcategory);
+    let products = res.results;
+    let list: any = [];
+    //TODO: pass favorite list
+    return { products, list, userId }
 }
 
 export const action: ActionFunction = async ({ request, params }): Promise<any> => {
     const formData = await request.formData();
-    const addToFavorite =JSON.parse(formData.get("addToFavorite"))
+    const addToFavorite = JSON.parse(formData.get("addToFavorite"))
     if (formData && addToFavorite) {
         const favorited = await db.favoriteList.findFirst({
             where: {
@@ -67,19 +50,19 @@ export const action: ActionFunction = async ({ request, params }): Promise<any> 
 
 export const meta: MetaFunction<typeof loader> = ({
     params,
-  }) => {
+}) => {
     const { subcategory } = params;
     return {
-      title:capitalizeFirstLetter(`${subcategory}`),
-      description: subcategory,
+        title: capitalizeFirstLetter(`${subcategory}`),
+        description: subcategory,
     };
-  };
+};
 
 function Subcategory() {
     const data = useLoaderData();
     return (
         <>
-            <CategoryPage data={data.products} favoriteList={data.list} userId={data.userId}/>
+            <CategoryPage data={data.products} favoriteList={data.list} userId={data.userId} />
             <Outlet />
         </>
     )
