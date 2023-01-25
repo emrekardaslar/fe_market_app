@@ -9,27 +9,24 @@ import { Outlet, useLoaderData } from '@remix-run/react';
 import { capitalizeFirstLetter, getHeaderItems } from '~/utils/helper';
 import { getUserId } from '~/services/sesssion.server';
 import { LoaderFunction, MetaFunction } from '@remix-run/node';
-import { db } from '~/utils/db.server';
+import useViewModel from "../views/ProductsPage/viewModel";
 
 export let loader: LoaderFunction = async ({ request }) => {
+    const { getCategoryNames, getProducts } = useViewModel();
+    let categoryNames = await getCategoryNames();
     let userId = await getUserId(request);
-    let cNameQuery = await db.product.groupBy({
-        by:["category"],
-    });
     let categoryObject: SidebarMenu = {items:[]}
-    let categoryNames: any = [];
-    cNameQuery.forEach(name => {
-        categoryNames.push(name.category); 
-        categoryObject.items.push({name: name.category, subItems: []})
+
+    categoryNames.forEach((name: string) => {
+        categoryObject.items.push({name: name, subItems: []})
     })
 
-    let products = await db.product.findMany({});
-
-    products.forEach(product => {
+    let products = await getProducts()
+    products.results.forEach((product: any) => {
         categoryObject.items.forEach((item: any) => {
             item.name == product.category && 
-            item.subItems.findIndex((a: any) => a.name == product.subCategory) == -1 &&
-            item.subItems.push({name: product.subCategory, subItems: []})
+            item.subItems.findIndex((a: any) => a.name == product.subcategory) == -1 &&
+            item.subItems.push({name: product.subcategory, subItems: []})
         })
     })
 
@@ -45,15 +42,15 @@ export const meta: MetaFunction<typeof loader> = () => {
 
 function getSidebarItems(categoryObject: any): any[] {
     const sidebar = categoryObject;
-    return sidebar.items.map((item => {
+    return sidebar.items.map(((item: any) => {
         return {
             key: item.name,
             icon: React.createElement(NotificationOutlined),
             label: capitalizeFirstLetter(item.name),
-            children: item.subItems.map(subItem => {
+            children: item.subItems.map((subItem: any) => {
                 return {
-                    key: subItem.name.replace(/\s+/g, '-').toLowerCase(),
-                    label: capitalizeFirstLetter(subItem.name)
+                    key: subItem?.name?.replace(/\s+/g, '-').toLowerCase(),
+                    label: capitalizeFirstLetter(subItem?.name)
                 }
             })
         }
