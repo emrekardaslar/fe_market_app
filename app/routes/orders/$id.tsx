@@ -1,16 +1,11 @@
 import { LoaderFunction, redirect } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { Col, Card } from "antd";
-import { getUserId } from "~/services/sesssion.server";
-import { db } from "~/utils/db.server";
 import Meta from 'antd/lib/card/Meta';
 import { getTotalPrice } from "~/utils/helper";
 
 export let loader: LoaderFunction = async ({ params, request }) => {
-    let userId = await getUserId(request);
-    if (!userId) throw redirect('/login')
-
-    let orderItems: any = (
+    let orderItems: any = []/* (
         await db.orderItem.findMany(
             {
                 where: {
@@ -22,7 +17,7 @@ export let loader: LoaderFunction = async ({ params, request }) => {
                 }
             }
         )
-    )
+    ) */
 
     return { orderItems: orderItems };
 };

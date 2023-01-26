@@ -8,7 +8,7 @@ import headerItems from "../mock/headerItems"
 
 export let loader: LoaderFunction = async ({ request }) => {
   let userId = await getUserId(request);
-  if (!userId) throw redirect('/login')
+  //if (!userId) throw redirect('/login')
   return { user: userId};
 };
 

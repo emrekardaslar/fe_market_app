@@ -28,9 +28,8 @@ export default function FavoritesViewModel () {
     async function getFavoriteList() {
         const favorites = await getFavoriteListRepo();
         const list: any = [];
-        favorites.forEach((item: any) => list.push(item.product))
-
-        //getProductWithId(item.product)
+         /* list.push(item.product) */
+        return favorites;
     }
 
     return {
