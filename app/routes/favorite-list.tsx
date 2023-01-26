@@ -57,7 +57,6 @@ function FavoriteList() {
     const { getFavoriteList } = useViewModel();
 
     useEffect(()=>{
-        window.localStorage.setItem('access', data.token);
         getFavoriteList().then(res => setFavoriteList(res));
     }, [])
 

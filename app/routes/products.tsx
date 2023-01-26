@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { NotificationOutlined } from '@ant-design/icons';
 import HeaderC from '~/components/Header'
 import Sidebar from '~/components/Sidebar'
@@ -6,7 +6,7 @@ import headerItems from "../mock/headerItems"
 import { SidebarMenu } from "../models/sidebarMenu"
 import { Layout } from 'antd';
 import { Outlet, useLoaderData } from '@remix-run/react';
-import { capitalizeFirstLetter, getHeaderItems } from '~/utils/helper';
+import { capitalizeFirstLetter, getAccessToken, getHeaderItems } from '~/utils/helper';
 import { getUserId } from '~/services/sesssion.server';
 import { LoaderFunction, MetaFunction } from '@remix-run/node';
 import useViewModel from "../views/ProductsPage/viewModel";
@@ -30,7 +30,9 @@ export let loader: LoaderFunction = async ({ request }) => {
         })
     })
 
-    return {user: userId, categoryNames, categoryObject};
+    const accessToken = await getAccessToken(request)
+
+    return {user: userId, categoryNames, categoryObject, token: accessToken};
 };
 
 export const meta: MetaFunction<typeof loader> = () => {
@@ -60,6 +62,11 @@ function getSidebarItems(categoryObject: any): any[] {
 function Products() {
     const data = useLoaderData()
     let items = getHeaderItems(data, headerItems)
+
+    useEffect(()=>{
+        window.localStorage.setItem('access', data.token);
+    }, [])
+
     return (
         <Layout>
             <HeaderC items={items} selectedKey="Products" />

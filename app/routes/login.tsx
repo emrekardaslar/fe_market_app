@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction, json, MetaFunction } from "@remix-run/node";
+import { ActionFunction, LoaderFunction, json, MetaFunction, redirect } from "@remix-run/node";
 import { Form, Outlet, useActionData, useLoaderData } from "@remix-run/react"
 import HeaderC from "~/components/Header"
 import { checkJwtExpire, getHeaderItems } from "~/utils/helper";
@@ -34,9 +34,7 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
     };
   }
   
-  return json({
-      isLoggedIn: true
-  }, {
+  return redirect('/', {
     headers: {
       'Set-Cookie': await jwtCookie.serialize({
         user: user,
