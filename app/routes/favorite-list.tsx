@@ -57,7 +57,7 @@ function FavoriteList() {
     const { getFavoriteList } = useViewModel();
 
     useEffect(()=>{
-        getFavoriteList().then(res => setFavoriteList(res));
+        getFavoriteList().then(res => {let favoriteList = res.map((fav: any) => fav.product[0]); setFavoriteList(favoriteList)});
     }, [])
 
     return (
