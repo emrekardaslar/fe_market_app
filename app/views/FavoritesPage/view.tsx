@@ -33,7 +33,7 @@ function FavoritesView({data, favorites, setUpdate}: any) {
                                     <Meta key={item.product.id} title={item.product.name} description={`Price: ${item.product.price}`} />
                                     <br></br>
                                     <Button type='primary' onClick={() => { increaseCartQuantity(item.product.id, item.product.name, item.product.price); cartAddedNotification(item.product.name, item.product.price); }}>Add to Cart</Button>
-                                    <Button style={{ marginLeft: "1rem" }} type={"primary"} shape="circle" icon={<HeartOutlined />} danger onClick={() => { removeFromFavorites(item.id); setUpdate(true) }}></Button>
+                                    <Button style={{ marginLeft: "1rem" }} type={"primary"} shape="circle" icon={<HeartOutlined />} danger onClick={() => { removeFromFavorites(item.id).then(() => setUpdate(true)) }}></Button>
                                 </Card>
                             </Col>
                         </div>

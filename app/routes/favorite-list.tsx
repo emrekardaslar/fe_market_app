@@ -12,28 +12,6 @@ export let loader: LoaderFunction = async ({ request }) => {
     return {token: accessToken, baseUrl: process.env.REACT_APP_BASE_URL, isLoggedIn: true};
 };
 
-export const action: ActionFunction = async ({ request }) => {
-    const formData = await request.formData();
-    const addToFavorite =JSON.parse(formData.get("addToFavorite"))
-    /* if (formData && addToFavorite) {
-        const favorited = await db.favoriteList.findFirst({
-            where: {
-                productId: addToFavorite.productId,
-                userId: addToFavorite.userId
-            }
-        })
-        if (!favorited) {
-            await db.favoriteList.create({
-                data: {
-                    productId: addToFavorite.productId,
-                    userId: addToFavorite.userId
-                }
-            })
-        }
-    } */
-    return {}
-};
-
 export const meta: MetaFunction<typeof loader> = () => {
     return {
       title: "Favorite List",
