@@ -1,4 +1,4 @@
-import { LoaderFunction, ActionFunction, redirect, MetaFunction } from "@remix-run/node";
+import { LoaderFunction, redirect, MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react"
 import { useEffect, useState } from "react";
 import { checkJwtExpire, getAccessToken } from "~/utils/helper";
