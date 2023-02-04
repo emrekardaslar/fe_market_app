@@ -1,10 +1,9 @@
-import { useFetcher, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
 import { notification } from "antd";
 import { getFavoriteListRepo } from "~/repository/favoritesRepository";
-import { getProductWithId } from "~/repository/generalRepository";
+import { deleteFavoriteProduct } from "~/repository/generalRepository";
 
 export default function FavoritesViewModel () {
-    const fetcher = useFetcher();
     const navigate = useNavigate();
 
     const cartAddedNotification = (name: string, price: number) => {
@@ -18,18 +17,18 @@ export default function FavoritesViewModel () {
         });
     };
 
-    const removeFromFavorites = (productId: any, user: string) => {
-        fetcher.submit(
-            {addToFavorite: JSON.stringify({productId: productId, userId: user})},
-            {method: 'post'}
-        )
+    async function removeFromFavorites(id: string) {
+        const res = await deleteFavoriteProduct(id);
+        return res;
     }
 
     async function getFavoriteList() {
         const favorites = await getFavoriteListRepo();
         const list: any = [];
-         /* list.push(item.product) */
-        return favorites;
+        favorites.forEach((res: any) => {
+            list.push({id: res.id, product: res.product[0]})
+        })
+        return list;
     }
 
     return {

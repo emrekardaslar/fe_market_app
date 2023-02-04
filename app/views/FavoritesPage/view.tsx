@@ -8,8 +8,8 @@ import { getHeaderItems } from "~/utils/helper";
 import Meta from 'antd/lib/card/Meta'
 import headerItems from "../../mock/headerItems"
 
-function FavoritesView({data, favorites}: any) {
-    const { cartAddedNotification, removeFromFavorites, getFavoriteList } = useViewModel();
+function FavoritesView({data, favorites, setUpdate}: any) {
+    const { cartAddedNotification, removeFromFavorites } = useViewModel();
     const { increaseCartQuantity } = useShoppingCart()
     let items = getHeaderItems(data, headerItems)
     return (
@@ -22,17 +22,18 @@ function FavoritesView({data, favorites}: any) {
                     <>
                         <div className="site-card-wrapper">
                             <Col span={6}>
-                                <Card key={item.id} hoverable title={item.name} bordered={false}
+                                <Card key={item.product.id} hoverable title={item.product.name} bordered={false}
                                     style={{ width: "15rem" }}
                                     cover={
                                         <div style={{ overflow: "hidden", height: "15rem" }}>
-                                            <img alt="example" style={{ height: "100%" }} src={item.imgLink} onClick={() => window.location.href = (`http://${data.baseUrl}/products/${item.category}/${item.subCategory}/${item.id}`)} />
+                                            <img alt="example" style={{ height: "100%" }} src={item.product.imgLink} 
+                                            onClick={() => window.location.href = (`http://${data.baseUrl}/products/${item.productcategory}/${item.product.subCategory}/${item.product.id}`)} />
                                         </div>
                                     }>
-                                    <Meta key={item.id} title={item.name} description={`Price: ${item.price}`} />
+                                    <Meta key={item.product.id} title={item.product.name} description={`Price: ${item.product.price}`} />
                                     <br></br>
-                                    <Button type='primary' onClick={() => { increaseCartQuantity(item.id, item.name, item.price); cartAddedNotification(item.name, item.price); }}>Add to Cart</Button>
-                                    <Button style={{ marginLeft: "1rem" }} type={"primary"} shape="circle" icon={<HeartOutlined />} danger onClick={() => { removeFromFavorites(item.id, data.user) }}></Button>
+                                    <Button type='primary' onClick={() => { increaseCartQuantity(item.product.id, item.product.name, item.product.price); cartAddedNotification(item.product.name, item.product.price); }}>Add to Cart</Button>
+                                    <Button style={{ marginLeft: "1rem" }} type={"primary"} shape="circle" icon={<HeartOutlined />} danger onClick={() => { removeFromFavorites(item.id); setUpdate(true) }}></Button>
                                 </Card>
                             </Col>
                         </div>

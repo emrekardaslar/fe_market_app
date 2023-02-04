@@ -30,16 +30,6 @@ export const action: ActionFunction = async ({ request }) => {
                 }
             })
         }
-        else {
-            await db.favoriteList.delete({
-                where: {
-                    userId_productId: {
-                        productId: addToFavorite.productId,
-                        userId: addToFavorite.userId
-                    }
-                }
-            })
-        }
     } */
     return {}
 };
@@ -54,15 +44,16 @@ export const meta: MetaFunction<typeof loader> = () => {
 function FavoriteList() {
     const data = useLoaderData();
     const [favoriteList, setFavoriteList] = useState([]);
+    const [update, setUpdate] = useState(false);
     const { getFavoriteList } = useViewModel();
 
     useEffect(()=>{
-        getFavoriteList().then(res => {let favoriteList = res.map((fav: any) => fav.product[0]); setFavoriteList(favoriteList)});
-    }, [])
+        getFavoriteList().then(res => {setFavoriteList(res)});
+    }, [update])
 
     return (
         <>
-            <FavoritesView data={data} favorites={favoriteList}/>
+            <FavoritesView data={data} favorites={favoriteList} setUpdate={setUpdate}/>
         </>
     )
 }
