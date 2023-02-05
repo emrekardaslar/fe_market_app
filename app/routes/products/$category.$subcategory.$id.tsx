@@ -1,7 +1,7 @@
 import { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import moment from 'moment';
-import ProductPage from '~/components/ProductPage';
+import ProductPage from '~/views/ProductPage/view';
 import { getUserId } from '~/services/sesssion.server';
 import { db } from '~/utils/db.server';
 import { capitalizeFirstLetter } from '~/utils/helper';

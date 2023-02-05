@@ -5,8 +5,8 @@ import Meta from "antd/lib/card/Meta"
 import { ProductImages } from "emrekardaslar-uikit";
 import { useEffect, useState } from "react";
 import { useShoppingCart } from "~/context/CartContext"
-import Comments from "./Comments";
-import PageContent from "./UI/PageContent"
+import Comments from "../../components/Comments";
+import PageContent from "../../components/UI/PageContent"
 
 interface ProductPageProps {
     product: any,
