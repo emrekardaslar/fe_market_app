@@ -1,7 +1,7 @@
 import { useNavigate } from "@remix-run/react";
 import { notification } from "antd";
 import { getFavoriteListRepo } from "~/repository/favoritesRepository";
-import { addProductToFavorites, deleteFavoriteProduct } from "~/repository/generalRepository";
+import { addProductToFavorites, deleteFavoriteProduct } from "~/repository/favoritesRepository";
 
 export default function FavoritesViewModel () {
     const navigate = useNavigate();

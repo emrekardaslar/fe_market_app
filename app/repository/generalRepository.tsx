@@ -44,21 +44,3 @@ export async function getProductWithId(id: string) {
     })
     return res.data;
 }
-
-export async function deleteFavoriteProduct(id: string) {
-    const API_BASE_URL = getEnvVariable("API_URL")
-    const res = await axios.delete(API_BASE_URL + `/favoriteList/${id}`, { headers: {"Authorization" : `Bearer ${localStorage.getItem("access")}`} })
-    return res.data;
-}
-
-export async function addProductToFavorites(id: string) {
-    const API_BASE_URL = getEnvVariable("API_URL")
-    const res = await axios.post(API_BASE_URL + `/favoriteList/`, 
-    { 
-        product: id
-    },
-    {
-        headers: {"Authorization" : `Bearer ${localStorage.getItem("access")}`},
-    })
-    return res.data;
-}
