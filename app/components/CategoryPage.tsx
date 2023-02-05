@@ -1,22 +1,23 @@
-import { useFetcher, useNavigate } from '@remix-run/react'
+import { useNavigate } from '@remix-run/react'
 import { Row, Col, Card, Button, notification } from 'antd'
 import Meta from 'antd/lib/card/Meta'
 import PageContent from './UI/PageContent'
 import { useShoppingCart } from "~/context/CartContext";
 import { HeartOutlined } from '@ant-design/icons';
+import useFavoriteViewModel from "../views/FavoritesPage/viewModel";
 
 interface CategoryProps {
     data: any;
     favoriteList: any;
-    userId: any;
+    setUpdate: any;
 }
 
-function CategoryPage({ data, favoriteList, userId }: CategoryProps) {
+function CategoryPage({ data, favoriteList, setUpdate }: CategoryProps) {
+    const { addToFavorites, removeFromFavorites } = useFavoriteViewModel();
     const navigate = useNavigate()
     const {
         increaseCartQuantity,
     } = useShoppingCart()
-    const fetcher = useFetcher();
 
     const cartAddedNotification = (name: string, price: number) => {
         notification.open({
@@ -29,17 +30,25 @@ function CategoryPage({ data, favoriteList, userId }: CategoryProps) {
         });
     };
 
-    const addToFavorite = (productId: any) => {
-        fetcher.submit(
-            {addToFavorite: JSON.stringify({productId: productId, userId: userId})},
-            {method: 'post'}
-        )
+    const addToFavorite = async (productId: any) => {
+        if (isFavorited(productId)){
+            favoriteList.forEach(async (item: any) => {
+                if (item.product.id == productId) {
+                    await removeFromFavorites(item.id)
+                    setUpdate(Math.random());
+                }
+            })
+        }
+        else {
+            await addToFavorites(productId)
+            setUpdate(Math.random());
+        }
     }
 
     const isFavorited = (productId: any) => {
         let result = false;
         favoriteList.forEach((item: any) => {
-            if (item.id == productId) {
+            if (item.product.id == productId) {
                 result = true;
             }
         })
@@ -64,7 +73,8 @@ function CategoryPage({ data, favoriteList, userId }: CategoryProps) {
                                         <Meta key={item.id} title={item.name} description={`Price: ${item.price}`} />
                                         <br></br>
                                         <Button type='primary' onClick={() => { increaseCartQuantity(item.id, item.name, item.price); cartAddedNotification(item.name, item.price); }}>Add to Cart</Button>
-                                        <Button style={{marginLeft: "1rem"}} type={isFavorited(item.id) ? "primary" : "default"} shape="circle" icon={<HeartOutlined />} danger onClick={()=>{addToFavorite(item.id)}}></Button>
+                                        <Button style={{marginLeft: "1rem"}} type={isFavorited(item.id) ? "primary" : "default"} shape="circle" icon={<HeartOutlined />} danger 
+                                            onClick={()=>addToFavorite(item.id)}></Button>
                                     </Card>
                                 </Col>
                             </div>

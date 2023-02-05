@@ -1,7 +1,7 @@
 import { useNavigate } from "@remix-run/react";
 import { notification } from "antd";
 import { getFavoriteListRepo } from "~/repository/favoritesRepository";
-import { deleteFavoriteProduct } from "~/repository/generalRepository";
+import { addProductToFavorites, deleteFavoriteProduct } from "~/repository/generalRepository";
 
 export default function FavoritesViewModel () {
     const navigate = useNavigate();
@@ -22,6 +22,11 @@ export default function FavoritesViewModel () {
         return res;
     }
 
+    async function addToFavorites(id: any) {
+        const res = await addProductToFavorites(id);
+        return res;
+    }
+
     async function getFavoriteList() {
         const favorites = await getFavoriteListRepo();
         const list: any = [];
@@ -34,6 +39,7 @@ export default function FavoritesViewModel () {
     return {
         cartAddedNotification,
         removeFromFavorites,
-        getFavoriteList
+        getFavoriteList,
+        addToFavorites
     }
 }
