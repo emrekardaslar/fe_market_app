@@ -1,6 +1,6 @@
 import { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
-import CategoryPage from '~/components/CategoryPage'
+import CategoryPage from '~/views/CategoryPage/view'
 import { getUserId } from '~/services/sesssion.server'
 import { capitalizeFirstLetter } from '~/utils/helper'
 import useViewModel from "../../views/ProductsPage/viewModel";

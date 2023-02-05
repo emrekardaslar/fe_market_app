@@ -1,11 +1,10 @@
 import { useNavigate } from '@remix-run/react'
-import { Row, Col, Card, Button, notification } from 'antd'
+import { Row, Col, Card, Button } from 'antd'
 import Meta from 'antd/lib/card/Meta'
-import PageContent from './UI/PageContent'
+import PageContent from '../../components/UI/PageContent'
 import { useShoppingCart } from "~/context/CartContext";
 import { HeartOutlined } from '@ant-design/icons';
-import useFavoriteViewModel from "../views/FavoritesPage/viewModel";
-
+import useViewModel from "./viewModel";
 interface CategoryProps {
     data: any;
     favoriteList: any;
@@ -13,47 +12,12 @@ interface CategoryProps {
 }
 
 function CategoryPage({ data, favoriteList, setUpdate }: CategoryProps) {
-    const { addToFavorites, removeFromFavorites } = useFavoriteViewModel();
     const navigate = useNavigate()
     const {
         increaseCartQuantity,
     } = useShoppingCart()
 
-    const cartAddedNotification = (name: string, price: number) => {
-        notification.open({
-            message: `${name} added to your cart`,
-            description:
-                `${name} added to your cart for  $ ${price}`,
-            onClick: () => {
-                navigate("/cart")
-            },
-        });
-    };
-
-    const addToFavorite = async (productId: any) => {
-        if (isFavorited(productId)){
-            favoriteList.forEach(async (item: any) => {
-                if (item.product.id == productId) {
-                    await removeFromFavorites(item.id)
-                    setUpdate(Math.random());
-                }
-            })
-        }
-        else {
-            await addToFavorites(productId)
-            setUpdate(Math.random());
-        }
-    }
-
-    const isFavorited = (productId: any) => {
-        let result = false;
-        favoriteList.forEach((item: any) => {
-            if (item.product.id == productId) {
-                result = true;
-            }
-        })
-        return result;
-    }
+    const { addToFavorite, cartAddedNotification, isFavorited } = useViewModel(favoriteList, setUpdate)
 
     return (
         <>
