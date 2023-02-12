@@ -1,10 +1,9 @@
-import { useNavigate } from "@remix-run/react";
 import { notification } from "antd";
 import { getFavoriteListRepo } from "~/repository/favoritesRepository";
 import { addProductToFavorites, deleteFavoriteProduct } from "~/repository/favoritesRepository";
 
 export default function FavoritesViewModel () {
-    const navigate = useNavigate();
+   /*  const navigate = useNavigate(); */
 
     const cartAddedNotification = (name: string, price: number) => {
         notification.open({
@@ -12,7 +11,7 @@ export default function FavoritesViewModel () {
             description:
                 `${name} added to your cart for  $ ${price}`,
             onClick: () => {
-                navigate("/cart")
+               /// navigate("/cart")
             },
         });
     };

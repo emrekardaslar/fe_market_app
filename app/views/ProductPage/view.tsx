@@ -1,46 +1,41 @@
 import { HeartOutlined } from "@ant-design/icons";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
-import { Row, Card, Button, Col, Rate, notification, Badge, Space } from "antd"
+import { useNavigate } from "@remix-run/react";
+import { Button, Rate, notification, Badge } from "antd"
 import Meta from "antd/lib/card/Meta"
 import { ProductImages } from "emrekardaslar-uikit";
 import { useEffect, useState } from "react";
 import { useShoppingCart } from "~/context/CartContext"
 import Comments from "../../components/Comments";
 import PageContent from "../../components/UI/PageContent"
+import useViewModel from "./viewModel";
 
 interface ProductPageProps {
     product: any,
     comments: any,
-    user: any,
-    favoriteList: any
+    favoriteList: any,
+    setUpdate: any
 }
 
-function ProductPage({ product, comments, user, favoriteList }: ProductPageProps) {
+function ProductPage({ product, comments, favoriteList, setUpdate }: ProductPageProps) {
+    const navigate = useNavigate();
     const {
         increaseCartQuantity,
         getItemQuantity
-    } = useShoppingCart()
+    } = useShoppingCart();
     const [value, setValue] = useState(product.rating);
     const [itemQuantity, setItemQuantity] = useState(0);
-    const fetcher = useFetcher();
-    const data = useLoaderData();
-    const navigate = useNavigate()
 
-    const setRating = () => {
-        const ratings = data.rating;
-        let counter = 0;
-        let total = 0;
-        ratings.forEach((rating: any) => {
-            total += rating.value
-            counter++;
-        });
-        if (counter == 0) {
-            setValue(5)
-        }
-        else {
-            const average = total / counter;
-            setValue(average)
-        }
+    const { addToFavorite, isFavorited, giveRating, getRating } = useViewModel();
+
+    const setRating = async () => {
+       const res = await getRating(product.id);
+       let counter = 0;
+       let total = 0;
+       res.forEach((rating: any) => {
+          total += rating.value
+          counter++;
+       })
+       setValue(total/counter);
     }
 
     const setItemQty = () => {
@@ -52,18 +47,10 @@ function ProductPage({ product, comments, user, favoriteList }: ProductPageProps
         setItemQty()
     }, [])
 
-    const updateRating = (val: number) => {
-        const rating = {
-            value: val,
-            userId: user.id,
-            productId: product.id
-        }
-
-        fetcher.submit(
-            { rating: JSON.stringify(rating) },
-            { method: 'post' }
-        )
-        setValue(val)
+    const updateRating = async (val: number) => {
+        const res = await giveRating(product.id, val);
+        //TODO: not working
+        setValue(val);
     }
 
     const cartAddedNotification = (name: string, price: number) => {
@@ -78,13 +65,6 @@ function ProductPage({ product, comments, user, favoriteList }: ProductPageProps
         setItemQuantity(itemQuantity + 1)
     };
 
-    const addToFavorite = (product: any, user: any) => {
-        fetcher.submit(
-            {addToFavorite: JSON.stringify({productId: product.id, userId: user.id})},
-            {method: 'post'}
-        )
-    }
-
     return (
         <PageContent>
             <>
@@ -96,10 +76,16 @@ function ProductPage({ product, comments, user, favoriteList }: ProductPageProps
                         <Meta description={product.description} />
                         <br></br>
                         <Badge count={itemQuantity} status={"success"} showZero>
-                            <Button type='primary' onClick={() => { increaseCartQuantity(product.id, product.name, product.price); cartAddedNotification(product.name, product.price); }}>Add to Cart</Button>
+                            <Button type='primary' onClick={() => { 
+                                increaseCartQuantity(product.id, product.name, product.price); 
+                                cartAddedNotification(product.name, product.price); 
+                            }}>Add to Cart</Button>
                         </Badge>
-                        <Button style={{marginLeft: "1rem"}} type={favoriteList.length == 0 ? "default" : "primary"} shape="circle" icon={<HeartOutlined />} danger onClick={()=>{addToFavorite(product, user)}}></Button>
-                        <Comments data={comments} user={user} />
+                        <Button style={{marginLeft: "1rem"}} 
+                            type={isFavorited(product.id, favoriteList) ? "primary" : "default"} 
+                            shape="circle" icon={<HeartOutlined />} danger 
+                            onClick={()=>{addToFavorite(product.id, favoriteList, setUpdate)}}></Button>
+                        <Comments data={comments} user={null} />
                     </>
                 } imageLinks={[
                     product.imgLink,
