@@ -2,16 +2,16 @@ import { LoaderFunction, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import moment from 'moment';
 import ProductPage from '~/views/ProductPage/view';
-import { capitalizeFirstLetter } from '~/utils/helper';
+import { capitalizeFirstLetter, checkJwtExpire } from '~/utils/helper';
 import useViewModel from "~/views/ProductPage/viewModel";
 import useFavoritelistViewModel from "~/views/FavoritesPage/viewModel";
 import { useEffect, useState } from 'react';
 
-export const loader: LoaderFunction = async ({ params }) => {
-    const { getProduct, getComments, getRating } = useViewModel();
+export const loader: LoaderFunction = async ({ request, params }) => {
+    const { getProduct, getComments } = useViewModel();
     let product = await getProduct(params.id);
     let comments = await getComments(params.id);  
-    let rating = await getRating(params.id);
+    const isLoggedIn = !await checkJwtExpire(request)
 
     comments.forEach((comment: any) => {
         comment.author = comment.user.username
@@ -19,7 +19,7 @@ export const loader: LoaderFunction = async ({ params }) => {
         comment.datetime = moment(comment.created_at).fromNow()
     })
 
-    return { product: product, comments: comments, rating: rating }
+    return { product: product, comments: comments, isLoggedIn: isLoggedIn }
 };
 
 export const meta: MetaFunction<typeof loader> = ({
@@ -39,11 +39,11 @@ function ProductDetail() {
     const { getFavoriteList } = useFavoritelistViewModel();
 
     useEffect(()=>{
-        getFavoriteList().then(res => {setFavoriteList(res)});
+        if (data.isLoggedIn) getFavoriteList().then(res => {setFavoriteList(res)});
     }, [update])
     
     return (
-        <ProductPage product={data.product} comments={data.comments} favoriteList={favoriteList} setUpdate={setUpdate}/>
+        <ProductPage product={data.product} comments={data.comments} favoriteList={favoriteList} setUpdate={setUpdate} isLoggedIn={data.isLoggedIn}/>
     )
 }
 

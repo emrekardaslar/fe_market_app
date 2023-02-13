@@ -13,10 +13,11 @@ interface ProductPageProps {
     product: any,
     comments: any,
     favoriteList: any,
-    setUpdate: any
+    setUpdate: any,
+    isLoggedIn: boolean
 }
 
-function ProductPage({ product, comments, favoriteList, setUpdate }: ProductPageProps) {
+function ProductPage({ product, comments, favoriteList, setUpdate, isLoggedIn }: ProductPageProps) {
     const navigate = useNavigate();
     const {
         increaseCartQuantity,
@@ -24,18 +25,16 @@ function ProductPage({ product, comments, favoriteList, setUpdate }: ProductPage
     } = useShoppingCart();
     const [value, setValue] = useState(product.rating);
     const [itemQuantity, setItemQuantity] = useState(0);
+    const [existingRatingId, setExistingRatingId] = useState(null);
 
     const { addToFavorite, isFavorited, giveRating, getRating } = useViewModel();
 
     const setRating = async () => {
-       const res = await getRating(product.id);
-       let counter = 0;
-       let total = 0;
-       res.forEach((rating: any) => {
-          total += rating.value
-          counter++;
-       })
-       setValue(total/counter);
+       const res = await getRating(product.id, isLoggedIn);
+       setValue(res.avg_rating);
+       if (res.rating_id) {
+        setExistingRatingId(res.rating_id);
+       }
     }
 
     const setItemQty = () => {
@@ -48,8 +47,7 @@ function ProductPage({ product, comments, favoriteList, setUpdate }: ProductPage
     }, [])
 
     const updateRating = async (val: number) => {
-        const res = await giveRating(product.id, val);
-        //TODO: not working
+        await giveRating(product.id, val, existingRatingId);
         setValue(val);
     }
 

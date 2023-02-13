@@ -15,8 +15,8 @@ export default function ProductViewModel() {
         return response.data.results;
     }
 
-    async function getRating(id: number) {
-        const response = await getProductRating(id);
+    async function getRating(id: number, isLoggedIn: boolean) {
+        const response = await getProductRating(id, isLoggedIn);
         return response.data.results;
     }
 
@@ -28,8 +28,8 @@ export default function ProductViewModel() {
 
     }
 
-    async function giveRating(id: number, stars: number) {
-        const response = await giveProductRating(id, stars);
+    async function giveRating(id: number, stars: number, existingRatingId: any) {
+        const response = await giveProductRating(id, stars, existingRatingId);
         return response.data.results;
     }
 
