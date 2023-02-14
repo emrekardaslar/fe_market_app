@@ -26,8 +26,9 @@ function ProductPage({ product, comments, favoriteList, setUpdate, isLoggedIn }:
     const [value, setValue] = useState(product.rating);
     const [itemQuantity, setItemQuantity] = useState(0);
     const [existingRatingId, setExistingRatingId] = useState(null);
+    const [user, setUser] = useState(null);
 
-    const { addToFavorite, isFavorited, giveRating, getRating } = useViewModel();
+    const { addToFavorite, isFavorited, giveRating, getRating, getUserId, createComment } = useViewModel();
 
     const setRating = async () => {
        const res = await getRating(product.id, isLoggedIn);
@@ -44,6 +45,8 @@ function ProductPage({ product, comments, favoriteList, setUpdate, isLoggedIn }:
     useEffect(() => {
         setRating()
         setItemQty()
+        const loggedInUser = getUserId();
+        setUser(loggedInUser);
     }, [])
 
     const updateRating = async (val: number) => {
@@ -83,7 +86,7 @@ function ProductPage({ product, comments, favoriteList, setUpdate, isLoggedIn }:
                             type={isFavorited(product.id, favoriteList) ? "primary" : "default"} 
                             shape="circle" icon={<HeartOutlined />} danger 
                             onClick={()=>{addToFavorite(product.id, favoriteList, setUpdate)}}></Button>
-                        <Comments data={comments} user={null} />
+                        <Comments product={product} data={comments} user={user} />
                     </>
                 } imageLinks={[
                     product.imgLink,

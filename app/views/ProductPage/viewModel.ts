@@ -1,5 +1,5 @@
 import { getProductWithId } from "~/repository/generalRepository";
-import { getProductComments, getProductRating, giveProductRating } from "~/repository/productRepository";
+import { createProductComment, deleteCommentWithId, editCommentWithId, getProductComments, getProductRating, giveProductRating } from "~/repository/productRepository";
 import useFavoriteViewModel from "../FavoritesPage/viewModel";
 
 export default function ProductViewModel() {
@@ -20,17 +20,36 @@ export default function ProductViewModel() {
         return response.data.results;
     }
 
-    async function createComment() {
-
+    async function createComment(id: number, content: any, userId: number) {
+        const response = await createProductComment(id, content, userId);
+        return response.data;
     }
 
-    async function deleteComment() {
+    async function deleteComment(id: number) {
+        const response = await deleteCommentWithId(id);
+        return response.data.results;
+    }
 
+    async function editComment(id: number, productId: number, content: string, userId: number) {
+        const response = await editCommentWithId(id, productId, content, userId);
+        return response.data.results;
     }
 
     async function giveRating(id: number, stars: number, existingRatingId: any) {
         const response = await giveProductRating(id, stars, existingRatingId);
         return response.data.results;
+    }
+
+    function getUserId() {
+        // Get the JWT token from local storage
+        const token = localStorage.getItem('access');
+        if (token) {
+            // Decode the token
+            const decodedToken = JSON.parse(atob(token.split('.')[1]));
+            // Get the user ID from the decoded token
+            const userId = decodedToken.user_id;
+            return userId;
+        }
     }
 
     const addToFavorite = async (productId: any, favoriteList: any, setUpdate: any) => {
@@ -67,5 +86,7 @@ export default function ProductViewModel() {
         getProduct,
         addToFavorite,
         isFavorited,
+        getUserId,
+        editComment
     }
 }
