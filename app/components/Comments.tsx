@@ -37,7 +37,7 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
     const [maxValue, setMaxValue] = useState(5)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [commentToEdit, setCommentToEdit] = useState<any>(null);
-    const [editContent, setEditContent] = useState("")
+    const [editStr, setEditStr] = useState("");
     const { deleteComment, editComment } = useViewModel();
 
     const itemPerPage = 5;
@@ -46,11 +46,11 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
         setMaxValue(value * itemPerPage)
     }
 
-    const handleOk = () => {
+    const handleOk = async () => {
         setIsModalOpen(false);
         let edit = commentToEdit;
-        edit.content = editContent
-        editComment(edit.id, edit.product, edit.content, edit.user);
+        edit.content = editStr;
+        await editComment(edit.id, edit.product, editStr, edit.user);
         setCommentToEdit(null)
     };
 
@@ -70,11 +70,12 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
     async function editCommentWithId(id: any) {
         const edit = comments.filter(comment => comment.id == id)[0]
         setCommentToEdit(edit)
+        setEditStr(edit.content);
         setIsModalOpen(true);
     }
 
-    function commentEditHandler(event: any) {
-        setEditContent(event.target.value)
+    function commentEditHandler(str: any) {
+        setEditStr(str)
     }
 
     const actions = [
@@ -96,7 +97,7 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
             <Pagination defaultCurrent={1} total={comments.length} defaultPageSize={5} onChange={handlePagination} />
             
             <Modal title="Edit Comment" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <TextArea rows={4} defaultValue={commentToEdit && commentToEdit.content} onChange={commentEditHandler}/>
+                <TextArea rows={4} value={editStr} onChange={e=> commentEditHandler(e.target.value)}/>
             </Modal>
         </>
     );
