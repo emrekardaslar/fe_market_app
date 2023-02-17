@@ -1,14 +1,5 @@
 // app/services/session.server.ts
 import { createCookieSessionStorage, redirect } from '@remix-run/node';
-import bcrypt from "bcrypt";
-
-import { db } from "../utils/db.server";
-
-type LoginForm = {
-  username: string;
-  password: string;
-};
-
 // export the whole sessionStorage object
 export let sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -26,21 +17,6 @@ export async function logout(request: Request) {
   return redirect("/login", {
     headers: { "Set-Cookie": await destroySession(session) },
   });
-}
-
-export async function register({ username, password }: LoginForm) {
-  let passwordHash = await bcrypt.hash(password, 10);
-  return db.user.create({
-    data: { username, passwordHash },
-  });
-}
-
-export async function login({ username, password }: any) {
-  const user = await db.user.findUnique({ where: { username } });
-  if (!user) return null;
-  const isCorrectPassword = await bcrypt.compare(password, user.passwordHash);
-  if (!isCorrectPassword) return null;
-  return user;
 }
 
 // you can also export the methods individually for your own usage

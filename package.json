@@ -19,6 +19,7 @@
     "axios": "^1.2.2",
     "bcrypt": "^5.0.1",
     "emrekardaslar-uikit": "0.4.4",
+    "jsonwebtoken": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "remix-auth": "^3.3.0",

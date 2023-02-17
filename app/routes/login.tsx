@@ -1,10 +1,10 @@
-import { ActionFunction, LoaderFunction, json, MetaFunction } from "@remix-run/node";
+import { ActionFunction, LoaderFunction, json, MetaFunction, redirect } from "@remix-run/node";
 import { Form, Outlet, useActionData, useLoaderData } from "@remix-run/react"
 import HeaderC from "~/components/Header"
-import authenticator from "~/services/auth.service";
-import { createUserSession, login, sessionStorage } from "~/services/sesssion.server";
-import { getHeaderItems } from "~/utils/helper";
+import { checkJwtExpire, getHeaderItems } from "~/utils/helper";
 import headerItems from "../mock/headerItems"
+import useViewModel from "../views/LoginPage/viewModel";
+import { jwtCookie } from "~/services/cookie.server";
 
 type ActionData = {
   formError?: string;
@@ -13,6 +13,7 @@ type ActionData = {
 };
 
 export const action: ActionFunction = async ({ request }): Promise<Response | ActionData> => {
+  const { loginUser } = useViewModel();
   let { loginType, username, password } = Object.fromEntries(
     await request.formData()
   );
@@ -24,32 +25,28 @@ export const action: ActionFunction = async ({ request }): Promise<Response | Ac
 ) {
     return { formError: `Form not submitted correctly.` };
 }
-
-
   let fields = { loginType, username, password }
-
-  const user = await login({ username, password });
+  const user = await loginUser(username, password);
   if (!user) {
     return {
       fields,
       formError: `Username/Password combination is incorrect`,
     };
   }
-  return createUserSession(user.id, "/products");
+  
+  return redirect('/', {
+    headers: {
+      'Set-Cookie': await jwtCookie.serialize({
+        user: user,
+      }),
+    }
+  });
 };
 
 
 export const loader: LoaderFunction = async ({ request }) => {
-  await authenticator.isAuthenticated(request, {
-    successRedirect: "/"
-  });
-
-  const session = await sessionStorage.getSession(
-    request.headers.get("Cookie")
-  );
-
-  const error = session.get("sessionErrorKey");
-  return json<any>({ error });
+  const expired = checkJwtExpire(request)
+  return {expired: expired};
 };
 
 export const meta: MetaFunction<typeof loader> = () => {

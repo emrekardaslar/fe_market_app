@@ -1,13 +1,10 @@
 import { ActionFunction, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { Row, Col, Card, Button } from "antd"
-import { getUserId } from "~/services/sesssion.server";
-import { db } from "~/utils/db.server";
 
 export let loader: LoaderFunction = async ({ request }) => {
-    let userId = await getUserId(request);
-    if (!userId) throw redirect('/login')
-    let orders = (
+    //if (!userId) throw redirect('/login')
+    let orders = []; /* (
         await db.order.findMany(
             {
                 where: {
@@ -15,8 +12,8 @@ export let loader: LoaderFunction = async ({ request }) => {
                 }
             }
         )
-    )
-    return { orders: orders };
+    ) */
+    return { orders: [] };
 };
 
 export const action: ActionFunction = async ({ request }) => {

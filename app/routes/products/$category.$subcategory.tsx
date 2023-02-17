@@ -1,51 +1,18 @@
-import { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
+import { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
-import CategoryPage from '~/components/CategoryPage'
+import CategoryPage from '~/views/CategoryPage/view'
 import { getUserId } from '~/services/sesssion.server'
-import { db } from '~/utils/db.server'
 import { capitalizeFirstLetter } from '~/utils/helper'
 import useViewModel from "../../views/ProductsPage/viewModel";
+import useFavoriteViewModel from "../../views/FavoritesPage/viewModel";
+import { useEffect, useState } from 'react'
 
 export const loader: LoaderFunction = async ({ request, params }: any) => {
     let userId = await getUserId(request);
     const { getProductsWithSubCategory } = useViewModel();
     const res = await getProductsWithSubCategory(params.subcategory);
     let products = res.results;
-    let list: any = [];
-    //TODO: pass favorite list
-    return { products, list, userId }
-}
-
-export const action: ActionFunction = async ({ request, params }): Promise<any> => {
-    const formData = await request.formData();
-    const addToFavorite = JSON.parse(formData.get("addToFavorite"))
-    if (formData && addToFavorite) {
-        const favorited = await db.favoriteList.findFirst({
-            where: {
-                productId: addToFavorite.productId,
-                userId: addToFavorite.userId
-            }
-        })
-        if (!favorited) {
-            await db.favoriteList.create({
-                data: {
-                    productId: addToFavorite.productId,
-                    userId: addToFavorite.userId
-                }
-            })
-        }
-        else {
-            await db.favoriteList.delete({
-                where: {
-                    userId_productId: {
-                        productId: addToFavorite.productId,
-                        userId: addToFavorite.userId
-                    }
-                }
-            })
-        }
-    }
-    return {}
+    return { products, userId }
 }
 
 export const meta: MetaFunction<typeof loader> = ({
@@ -59,10 +26,18 @@ export const meta: MetaFunction<typeof loader> = ({
 };
 
 function Subcategory() {
+    const { getFavoriteList } = useFavoriteViewModel();
+    const [favoriteList, setFavoriteList] = useState([]);
+    const [update, setUpdate] = useState(0);
     const data = useLoaderData();
+
+    useEffect(()=>{
+        getFavoriteList().then(res => setFavoriteList(res));
+    }, [update])
+
     return (
         <>
-            <CategoryPage data={data.products} favoriteList={data.list} userId={data.userId} />
+            <CategoryPage data={data.products} favoriteList={favoriteList} setUpdate={setUpdate} />
             <Outlet />
         </>
     )

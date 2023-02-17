@@ -1,15 +1,30 @@
 import { login } from "~/repository/loginRepository";
 
-export default function LoginViewModel () {
+export default function LoginViewModel() {
     async function getUserData() {
-        if (localStorage.getItem("jwt")) {
-            return localStorage.getItem("jwt")
-        }
         return null;
+    }
+
+    async function loginUser(username: string, password: string) {
+        try {
+            const user = await login(username, password);
+            return user;
+        }
+        catch (e) {
+            return null;
+        }
+    }
+
+    async function logout() {
+        if (localStorage.getItem("jwt")) {
+            localStorage.removeItem("jwt")
+        }
     }
 
 
     return {
-        getUserData
+        getUserData,
+        logout,
+        loginUser
     }
 }

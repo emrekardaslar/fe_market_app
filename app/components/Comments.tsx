@@ -1,15 +1,16 @@
-import { useFetcher } from '@remix-run/react';
 import { Input, List, Form, Button, Comment, Avatar, Pagination, Modal, notification } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-
+import useViewModel from "../views/ProductPage/viewModel";
 const { TextArea } = Input;
 
 interface CommentItem {
-    author: string;
-    avatar: string;
-    content: React.ReactNode;
-    datetime: string;
+    id: string,
+    content: any,
+    product: string,
+    user: string,
+    avatar: string,
+    datetime: string
 }
 
 interface EditorProps {
@@ -18,7 +19,6 @@ interface EditorProps {
     submitting: boolean;
     value: string;
     user: any;
-    setComments: () => void;
 }
 
 const deleteNotification = () => {
@@ -35,11 +35,10 @@ const deleteNotification = () => {
 const CommentList = ({ comments, user, setComments }: { comments: CommentItem[], user: any, setComments: any }) => {
     const [minValue, setMinValue] = useState(0)
     const [maxValue, setMaxValue] = useState(5)
-    const fetcher = useFetcher();
-
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [commentToEdit, setCommentToEdit] = useState<any>(null);
-    const [editContent, setEditContent] = useState("")
+    const [editStr, setEditStr] = useState("");
+    const { deleteComment, editComment } = useViewModel();
 
     const itemPerPage = 5;
     const handlePagination = (value: any) => {
@@ -47,18 +46,11 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
         setMaxValue(value * itemPerPage)
     }
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleOk = () => {
+    const handleOk = async () => {
         setIsModalOpen(false);
         let edit = commentToEdit;
-        edit.content = editContent
-        fetcher.submit(
-            {commentToEdit: JSON.stringify(edit)},
-            {method: "post"}
-        );
+        edit.content = editStr;
+        await editComment(edit.id, edit.product, editStr, edit.user);
         setCommentToEdit(null)
     };
 
@@ -68,30 +60,27 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
     };
 
 
-    async function deleteComment(id: any) {
-        fetcher.submit(
-            { commentToDelete: id },
-            { method: "delete" }
-        );
-
-        let newComments = comments.filter(comment=> comment.id !== id)
+    async function deleteCommentWithId(id: any) {
+        await deleteComment(id)
+        let newComments = comments.filter(comment=> comment.id != id)
         setComments(newComments)
         deleteNotification();
     }
 
-    async function editComment(id: any) {
-        const edit = comments.filter(comment => comment.id === id)[0]
+    async function editCommentWithId(id: any) {
+        const edit = comments.filter(comment => comment.id == id)[0]
         setCommentToEdit(edit)
-        showModal()
+        setEditStr(edit.content);
+        setIsModalOpen(true);
     }
 
-    function commentEditHandler(event: any) {
-        setEditContent(event.target.value)
+    function commentEditHandler(str: any) {
+        setEditStr(str)
     }
 
     const actions = [
-        <span name='edit' value='edit' key="comment-basic-reply-to" onClick={(c)=>{editComment(c.currentTarget.parentNode?.parentNode?.parentNode?.parentNode?.parentElement?.id)}}>Edit</span>,
-        <span name='delete' value='delete' key="comment-basic-reply-to" onClick={(c) => { deleteComment(c.currentTarget.parentNode?.parentNode?.parentNode?.parentNode?.parentElement?.id) }}>Delete</span>
+        <span name='edit' value='edit' key="comment-basic-reply-to" onClick={(c)=>{editCommentWithId(c.currentTarget.parentNode?.parentNode?.parentNode?.parentNode?.parentElement?.id)}}>Edit</span>,
+        <span name='delete' value='delete' key="comment-basic-reply-to" onClick={(c) => { deleteCommentWithId(c.currentTarget.parentNode?.parentNode?.parentNode?.parentNode?.parentElement?.id) }}>Delete</span>
     ]
 
     return (
@@ -102,13 +91,13 @@ const CommentList = ({ comments, user, setComments }: { comments: CommentItem[],
                 itemLayout="horizontal"
                 renderItem={props =>
                     <>
-                        <Comment {...props} actions={props.author == user?.username ? actions : []} />
+                        <Comment {...props} actions={props.user == user ? actions : []} />
                     </>}
             />
             <Pagination defaultCurrent={1} total={comments.length} defaultPageSize={5} onChange={handlePagination} />
             
             <Modal title="Edit Comment" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <TextArea rows={4} defaultValue={commentToEdit && commentToEdit.content} onChange={commentEditHandler}/>
+                <TextArea rows={4} value={editStr} onChange={e=> commentEditHandler(e.target.value)}/>
             </Modal>
         </>
     );
@@ -131,33 +120,33 @@ const Editor = ({ onChange, onSubmit, submitting, value, user }: EditorProps) =>
 );
 
 
-function Comments({ data, user }: any) {
+function Comments({ data, user, product }: any) {
     const [comments, setComments] = useState<CommentItem[]>([]);
     const [submitting, setSubmitting] = useState(false);
     const [value, setValue] = useState('');
+    const { createComment } = useViewModel();
 
     useEffect(() => {
         setComments(data)
     }, [])
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        event?.preventDefault();
         if (!value) return;
-
-        setSubmitting(true);
-
-        setTimeout(() => {
-            setSubmitting(false);
-            setValue('');
-            setComments([
-                {
-                    author: user?.username,
-                    avatar: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
-                    content: <p>{value}</p>,
-                    datetime: moment('2016-11-22').fromNow(),
-                },
-                ...comments
-            ]);
-        }, 0);
+        const res = await createComment(product.id, value, user);
+        setValue('');
+        setComments([
+            ...comments,
+            {
+                id: res.id,
+                user: user,
+                avatar: 'https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes-thumbnail.png',
+                content: value,
+                product: product.id,
+                datetime: moment(Date.now()).fromNow()
+            },
+        ]);
+   
     }
 
 

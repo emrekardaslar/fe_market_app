@@ -1,19 +1,17 @@
-import { LoaderFunction, redirect, ActionFunction, MetaFunction } from "@remix-run/node";
-import { useLoaderData, Outlet, Form, useActionData } from "@remix-run/react";
+import { LoaderFunction, redirect, MetaFunction } from "@remix-run/node";
+import { useLoaderData, Outlet, useActionData } from "@remix-run/react";
 import { Button, Card } from "antd";
 import { useEffect, useState } from "react";
 import HeaderC from "~/components/Header";
 import { useShoppingCart } from "~/context/CartContext";
 import headerItems from "~/mock/headerItems";
-import { getUserId } from "~/services/sesssion.server";
-import { db } from "~/utils/db.server";
-import { getHeaderItems } from "~/utils/helper";
-import { v4 as uuidv4 } from 'uuid';
+import { checkJwtExpire, getAccessToken, getHeaderItems } from "~/utils/helper";
 
 export let loader: LoaderFunction = async ({ request }) => {
-    let userId = await getUserId(request);
-    if (!userId) throw redirect('/login')
-    return { user: userId };
+    const expired = await checkJwtExpire(request)
+    if (expired) throw redirect('/login')
+    const accessToken = await getAccessToken(request)
+    return {token: accessToken, baseUrl: process.env.REACT_APP_BASE_URL, isLoggedIn: true};
 };
 
 export const meta: MetaFunction<typeof loader> = () => {
@@ -23,44 +21,16 @@ export const meta: MetaFunction<typeof loader> = () => {
     };
 };
 
-export const action: ActionFunction = async ({ request }) => {
-    let done = false;
-    let formData = await request.formData()
-    const user = JSON.parse(formData.get("data")).user
-    const data = JSON.parse(formData.get("data")).data
-    let orderId = uuidv4()
-
-    const order = await db.order.create({
-        data: {
-            id: orderId,
-            userId: user
-        }
-    })
-
-
-    const orderItems = data.map(async (item: any) => {
-        await db.orderItem.create({
-            data: {
-                orderId: orderId,
-                productId: item.id,
-                quantity: item.quantity
-            }
-        })
-    })
-
-    if (orderItems && order) {
-        done = true;
-    }
-
-    return { done: done }
-};
-
 function Cart() {
     const data = useLoaderData();
     const actionData = useActionData();
     let items = getHeaderItems(data, headerItems)
     const [cartItems1, setCartItems1] = useState<any>([])
     const [total, setTotal] = useState(0.0)
+
+    function handleSubmit(val) {
+       console.log(val)
+    }
 
     const {
         getItemQuantity,
@@ -116,10 +86,8 @@ function Cart() {
                         <h2>
                             Total Price <strong>{total}</strong>
                         </h2>
-                        <Form method="post">
-                            <input type="hidden" name="data" defaultValue={JSON.stringify({ user: data.user, data: cartItems1 })} />
-                            <button className="ant-btn ant-btn-primary" type="submit">Create Order</button>
-                        </Form>
+                        <input type="hidden" name="data" defaultValue={JSON.stringify({ data: cartItems1 })} />
+                        <button className="ant-btn ant-btn-primary" onClick={()=>{handleSubmit(cartItems1)}}>Create Order</button>
                     </>}
             </div>
         </>
