@@ -1,11 +1,10 @@
 import { ActionFunction } from '@remix-run/node';
 import { Form, Outlet, useActionData } from '@remix-run/react'
 import HeaderC from '~/components/Header'
-import { register } from '~/services/sesssion.server';
-import { db } from '~/utils/db.server';
+import { register } from '~/repository/loginRepository';
+import { createUserSession } from '~/services/sesssion.server';
 import { getHeaderItems } from '~/utils/helper';
 import headerItems from "../mock/headerItems"
-import { createUserSession } from "../services/sesssion.server";
 
 type ActionData = {
     formError?: string;
@@ -31,25 +30,9 @@ export let action: ActionFunction = async ({
     }
 
     let fields = { loginType, username, password }
-
-    let userExists = await db.user.findFirst({ where: { username } });
-
-    if (loginType === 'register') {
-        if (userExists) {
-            return {
-                fields,
-                formError: `User with username ${username} already exists`,
-            };
-        }
-        const user = await register({ username, password });
-        if (!user) {
-            return {
-                fields,
-                formError: `Something went wrong trying to create a new user.`,
-            };
-        }
-        return createUserSession(user.id, "/products");
-    }
+    //Check if exists
+    const res = await register(username, password)
+    return createUserSession(res, "/products");
 };
 
 function Register() {

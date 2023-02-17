@@ -1,7 +1,6 @@
 import { ActionFunction, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { Row, Col, Card, Button } from "antd"
-import { db } from "~/utils/db.server";
 
 export let loader: LoaderFunction = async ({ request }) => {
     //if (!userId) throw redirect('/login')
@@ -14,7 +13,7 @@ export let loader: LoaderFunction = async ({ request }) => {
             }
         )
     ) */
-    return { orders: orders };
+    return { orders: [] };
 };
 
 export const action: ActionFunction = async ({ request }) => {
