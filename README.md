@@ -53,14 +53,18 @@ cp -R ../my-old-remix-app/app app
 ```
 
 ### Project Installation
-* Install dependencies by running:
+
+- Install dependencies by running:
+
 ```
 npm install
 ```
-* Create .env file, copy the URL in sample.env to your environment file and modify it
-* Generate database tables and generate data by running:
+
+- Create .env file, copy the URL in sample.env to your environment file and modify it
+- Generate database tables and generate data by running:
+
 ```
 npm i -g prisma
-npx prisma db push 
+npx prisma db push
 npx prisma db seed
 ```
