@@ -1,4 +1,4 @@
-import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
+import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -13,7 +13,7 @@ import HeaderC from "./components/Header";
 import { CartProvider } from "./context/CartContext";
 import { getEnv } from "./env.server";
 import headerItems from "./mock/headerItems";
-import { getAccessToken, getHeaderItems } from "./utils/helper";
+import { checkJwtExpire, getAccessToken, getHeaderItems } from "./utils/helper";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -32,9 +32,11 @@ export function links() {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const accessToken = await getAccessToken(request);
+  const expired = await checkJwtExpire(request);
   return json({
     ENV: getEnv(),
     token: accessToken,
+    expired: expired,
     pageInfo: request.url,
   });
 };
