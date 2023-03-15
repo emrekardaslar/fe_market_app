@@ -1,0 +1,81 @@
+import { useEffect, useState } from "react";
+import { Button, Card } from "antd";
+import { useShoppingCart } from "~/context/CartContext";
+import useViewModel from "./viewModel";
+
+function CartPage({ actionData }: any) {
+  const [cartItems1, setCartItems1] = useState<any>([]);
+  const [total, setTotal] = useState<any>(0.0);
+  const { increaseCartQuantity, decreaseCartQuantity, cartItems, clearCart } =
+    useShoppingCart();
+
+  const { handleSubmit, setTotalCost } = useViewModel();
+
+  useEffect(() => {
+    setCartItems1(cartItems);
+    const totalCost = setTotalCost(cartItems);
+    setTotal(Number(totalCost).toFixed(2));
+  }, [cartItems]);
+
+  useEffect(() => {
+    if (actionData && actionData.done) {
+      localStorage.clear();
+      setCartItems1([]);
+      clearCart();
+    }
+  }, [actionData]);
+  return (
+    <div style={{ margin: "1rem" }}>
+      {cartItems1.length === 0 ? (
+        <h2>Your cart is empty</h2>
+      ) : (
+        <>
+          <h2>
+            Total Items <strong>({cartItems1.length})</strong>
+          </h2>
+          {cartItems1.map((item: any) => (
+            <Card>
+              <p>Name: {item.name}</p>
+              <p>Quantity: {item.quantity}</p>
+              <p>Price: {(item.price * item.quantity).toFixed(2)}</p>
+              <Button
+                type="primary"
+                shape="circle"
+                style={{ marginRight: "1rem" }}
+                onClick={() =>
+                  increaseCartQuantity(item.id, item.name, item.price)
+                }
+              >
+                +
+              </Button>
+              <Button
+                shape="circle"
+                onClick={() => decreaseCartQuantity(item.id)}
+              >
+                -
+              </Button>
+            </Card>
+          ))}
+          <h2>
+            Total Price <strong>{total}</strong>
+          </h2>
+          <input
+            type="hidden"
+            name="data"
+            defaultValue={JSON.stringify({ data: cartItems1 })}
+          />
+          <button
+            className="ant-btn ant-btn-primary"
+            onClick={() => {
+              handleSubmit(cartItems1);
+            }}
+          >
+            Create Order
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+export default CartPage;
