@@ -4,7 +4,6 @@ import { getEnvVariable } from "~/utils/helper";
 const API_BASE_URL = getEnvVariable("API_URL");
 
 export async function createOrder(order: any) {
-  console.log(order);
   const options = {
     headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
   };
@@ -16,4 +15,10 @@ export async function createOrder(order: any) {
     },
     options
   );
+}
+
+export async function getUserOrders() {
+  return axios.get(API_BASE_URL + "/orderItem/", {
+    headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+  });
 }
