@@ -61,10 +61,4 @@ npm install
 ```
 
 - Create .env file, copy the URL in sample.env to your environment file and modify it
-- Generate database tables and generate data by running:
-
-```
-npm i -g prisma
-npx prisma db push
-npx prisma db seed
-```
+- You can use https://github.com/emrekardaslar/be_market_app project as your backend
