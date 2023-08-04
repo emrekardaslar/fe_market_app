@@ -55,7 +55,7 @@ export default function ProductViewModel() {
   function getUserId() {
     // Get the JWT token from local storage
     const token = localStorage.getItem("access");
-    if (token) {
+    if (token && token != "undefined") {
       // Decode the token
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
       // Get the user ID from the decoded token
