@@ -12,6 +12,7 @@ export async function createOrder(order: any) {
     {
       quantity: order.quantity,
       product: order.id,
+      order: order.id,
     },
     options
   );
@@ -19,6 +20,12 @@ export async function createOrder(order: any) {
 
 export async function getUserOrders() {
   return axios.get(API_BASE_URL + "/orderItem/", {
+    headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+  });
+}
+
+export async function deleteUserOrder(id: string) {
+  return axios.delete(API_BASE_URL + "/orderItem/" + id, {
     headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
   });
 }
