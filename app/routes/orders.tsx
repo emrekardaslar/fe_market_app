@@ -29,56 +29,53 @@ function Orders() {
       <Row key={Math.random()} style={{ marginLeft: "10px" }}>
         {orders.map((order: any) => (
           <div className="order">
-            {order.items.length > 0 && <h2>Order No: {order.id}</h2>}
-            {order.items.length > 0 &&
-              order.items.map((item: any) => (
-                <>
-                  <div className="site-card-wrapper">
-                    <Col span={6}>
-                      <Card title={item.product.name} style={{ width: 300 }}>
-                        <p>
-                          Created at:{" "}
-                          {new Date(item.created_at).toLocaleString("en-US")}
-                        </p>
+            <h2>Order No: {order.id}</h2>
+            {order.items.map((item: any) => (
+              <>
+                <div className="site-card-wrapper">
+                  <Col span={6}>
+                    <Card title={item.product.name} style={{ width: 300 }}>
+                      <p>
+                        Created at:{" "}
+                        {new Date(item.created_at).toLocaleString("en-US")}
+                      </p>
 
-                        <p>Qty: {item.quantity}</p>
+                      <p>Qty: {item.quantity}</p>
 
-                        <input
-                          type="hidden"
-                          name="orderId"
-                          defaultValue={item.id}
-                        />
-                        <button
-                          className="ant-btn ant-btn-primary ant-btn-dangerous"
-                          onClick={() => {
-                            deleteUserOrder(item.id).then(() => {
-                              getUserOrders().then((orders) => {
-                                setOrders(orders.data.results);
-                              });
+                      <input
+                        type="hidden"
+                        name="orderId"
+                        defaultValue={item.id}
+                      />
+                      <button
+                        className="ant-btn ant-btn-primary ant-btn-dangerous"
+                        onClick={() => {
+                          deleteUserOrder(item.id).then(() => {
+                            getUserOrders().then((orders) => {
+                              setOrders(orders.data.results);
                             });
-                          }}
-                        >
-                          Remove
-                        </button>
-                      </Card>
-                    </Col>
-                  </div>
-                </>
-              ))}
-            {order.items.length > 0 && (
-              <Button
-                className="ant-btn ant-btn-primary ant-btn-dangerous"
-                onClick={() => {
-                  deleteOrder(order.id).then(() => {
-                    getUserOrders().then((orders) => {
-                      setOrders(orders.data.results);
-                    });
+                          });
+                        }}
+                      >
+                        Remove
+                      </button>
+                    </Card>
+                  </Col>
+                </div>
+              </>
+            ))}
+            <Button
+              className="ant-btn ant-btn-primary ant-btn-dangerous"
+              onClick={() => {
+                deleteOrder(order.id).then(() => {
+                  getUserOrders().then((orders) => {
+                    setOrders(orders.data.results);
                   });
-                }}
-              >
-                Delete Order
-              </Button>
-            )}
+                });
+              }}
+            >
+              Delete Order
+            </Button>
           </div>
         ))}
       </Row>
