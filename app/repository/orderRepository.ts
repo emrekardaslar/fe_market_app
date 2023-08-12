@@ -19,6 +19,12 @@ export async function createOrder(order: any) {
 }
 
 export async function getUserOrders() {
+  return axios.get(API_BASE_URL + "/order/", {
+    headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+  });
+}
+
+export async function getUserOrderItems() {
   return axios.get(API_BASE_URL + "/orderItem/", {
     headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
   });
@@ -26,6 +32,12 @@ export async function getUserOrders() {
 
 export async function deleteUserOrder(id: string) {
   return axios.delete(API_BASE_URL + "/orderItem/" + id, {
+    headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+  });
+}
+
+export async function deleteOrder(id: string) {
+  return axios.delete(API_BASE_URL + "/order/" + id, {
     headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
   });
 }
