@@ -6,10 +6,16 @@ import useViewModel from "./viewModel";
 function CartPage({ actionData }: any) {
   const [cartItems1, setCartItems1] = useState<any>([]);
   const [total, setTotal] = useState<any>(0.0);
+  const [userId, setUserId] = useState(null);
   const { increaseCartQuantity, decreaseCartQuantity, cartItems, clearCart } =
     useShoppingCart();
 
-  const { handleSubmit, setTotalCost } = useViewModel();
+  const { handleSubmit, setTotalCost, getUserId } = useViewModel();
+
+  useEffect(() => {
+    const userId = getUserId();
+    setUserId(userId);
+  }, []);
 
   useEffect(() => {
     setCartItems1(cartItems);
@@ -67,7 +73,7 @@ function CartPage({ actionData }: any) {
           <button
             className="ant-btn ant-btn-primary"
             onClick={() => {
-              handleSubmit(cartItems1);
+              handleSubmit(cartItems1, userId);
             }}
           >
             Create Order

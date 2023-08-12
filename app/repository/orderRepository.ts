@@ -29,3 +29,27 @@ export async function deleteUserOrder(id: string) {
     headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
   });
 }
+
+export async function createOrderItems(orderItems: any, userId: any) {
+  const options = {
+    headers: { Authorization: `Bearer ${localStorage.getItem("access")}` },
+  };
+
+  const order = await axios.post(
+    API_BASE_URL + "/order/",
+    { user: userId },
+    options
+  );
+
+  orderItems.forEach((orderItem: any) => {
+    return axios.post(
+      API_BASE_URL + "/orderItem/",
+      {
+        quantity: orderItem.quantity,
+        product: orderItem.id,
+        order: order.data.id,
+      },
+      options
+    );
+  });
+}
