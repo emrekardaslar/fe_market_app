@@ -1,8 +1,11 @@
-import { createOrder, createOrderItems } from "~/repository/orderRepository";
+import { useShoppingCart } from "~/context/CartContext";
+import { createOrderItems } from "~/repository/orderRepository";
 
 export default function CartViewModel() {
+  const { clearCart } = useShoppingCart();
   const handleSubmit = (orderItems: any, userId: any) => {
     createOrderItems(orderItems, userId);
+    clearCart();
   };
 
   function getUserId() {

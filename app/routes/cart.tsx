@@ -1,5 +1,5 @@
 import { LoaderFunction, redirect, MetaFunction } from "@remix-run/node";
-import { Outlet, useActionData } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
 import { checkJwtExpire, getAccessToken } from "~/utils/helper";
 import CartPage from "~/views/CartPage/view";
 
@@ -22,12 +22,10 @@ export const meta: MetaFunction<typeof loader> = () => {
 };
 
 function Cart() {
-  const actionData = useActionData();
-
   return (
     <>
       <Outlet />
-      <CartPage actionData={actionData} />
+      <CartPage />
     </>
   );
 }

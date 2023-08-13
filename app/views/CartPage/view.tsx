@@ -3,7 +3,7 @@ import { Button, Card } from "antd";
 import { useShoppingCart } from "~/context/CartContext";
 import useViewModel from "./viewModel";
 
-function CartPage({ actionData }: any) {
+function CartPage() {
   const [cartItems1, setCartItems1] = useState<any>([]);
   const [total, setTotal] = useState<any>(0.0);
   const [userId, setUserId] = useState(null);
@@ -23,13 +23,6 @@ function CartPage({ actionData }: any) {
     setTotal(Number(totalCost).toFixed(2));
   }, [cartItems]);
 
-  useEffect(() => {
-    if (actionData && actionData.done) {
-      localStorage.clear();
-      setCartItems1([]);
-      clearCart();
-    }
-  }, [actionData]);
   return (
     <div style={{ margin: "1rem" }}>
       {cartItems1.length === 0 ? (
@@ -77,6 +70,15 @@ function CartPage({ actionData }: any) {
             }}
           >
             Create Order
+          </button>
+
+          <button
+            className="ant-btn ant-btn-dangerous"
+            onClick={() => {
+              clearCart();
+            }}
+          >
+            Clear Cart
           </button>
         </>
       )}
