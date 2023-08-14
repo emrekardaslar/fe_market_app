@@ -6,7 +6,7 @@ function ProductsView({ data }: any) {
   const navigate = useNavigate();
   const { getObject, navigateToProduct } = useViewModel();
   let products = data.products.results;
-  let keys = data.categoryNames;
+  let keys = data.categoryNames.map((categoryName: any) => categoryName.name);
   let productsObject = getObject(products, keys);
 
   return (

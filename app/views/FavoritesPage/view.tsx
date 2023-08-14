@@ -32,7 +32,8 @@ function FavoritesView({ data, favorites, setUpdate }: any) {
                           style={{ height: "100%" }}
                           src={item.product.imgLink}
                           onClick={() =>
-                            (window.location.href = `http://${data.baseUrl}/products/${item.productcategory}/${item.product.subCategory}/${item.product.id}`)
+                            (window.location.href =
+                              `http://${data.baseUrl}/products/${item.product.category_name}/${item.product.subcategory_name}/${item.product.id}`.toLowerCase())
                           }
                         />
                       </div>

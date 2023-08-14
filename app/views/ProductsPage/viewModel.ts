@@ -1,6 +1,6 @@
 import {
   getProductsRepo,
-  getCategoryNamesRepo,
+  getCategoriesRepo,
   getProductWithCategoryRepo,
   getProductWithId,
   getProductsWithSubCategoryRepo,
@@ -11,8 +11,8 @@ export default function ProductsViewModel() {
     return await getProductsRepo();
   }
 
-  async function getCategoryNames() {
-    return await getCategoryNamesRepo();
+  async function getCategories() {
+    return await getCategoriesRepo();
   }
 
   async function getProductsWithCategory(category: string) {
@@ -28,11 +28,13 @@ export default function ProductsViewModel() {
   }
 
   function navigateToProduct(product: any, navigate: any) {
-    navigate(`${product.category}/${product.subcategory}/${product.id}`);
+    navigate(
+      `${product.category_name}/${product.subcategory_name}/${product.id}`.toLowerCase()
+    );
   }
 
   function navigateToProductFromSubCategory(product: any, navigate: any) {
-    navigate(`${product.subcategory}/${product.id}`);
+    navigate(`${product.subcategory_name}/${product.id}`.toLowerCase());
   }
 
   function getObject(products: any, names: any) {
@@ -40,7 +42,7 @@ export default function ProductsViewModel() {
     names.forEach((name: string) => {
       res[name] = [];
       products.forEach((product: any) => {
-        product.category == name && res[name].push(product);
+        product.category_name == name && res[name].push(product);
       });
     });
     return res;
@@ -49,7 +51,7 @@ export default function ProductsViewModel() {
   return {
     getObject,
     getProducts,
-    getCategoryNames,
+    getCategories,
     getProductsWithCategory,
     getProduct,
     navigateToProduct,
