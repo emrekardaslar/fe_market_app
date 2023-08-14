@@ -9,22 +9,15 @@ import { LoaderFunction, MetaFunction } from "@remix-run/node";
 import useViewModel from "../views/ProductsPage/viewModel";
 
 export let loader: LoaderFunction = async ({ request }) => {
-  const { getCategoryNames, getProducts } = useViewModel();
-  let categoryNames = await getCategoryNames();
-  let categoryObject: SidebarMenu = { items: [] };
-
-  categoryNames.forEach((name: string) => {
-    categoryObject.items.push({ name: name, subItems: [] });
+  const { getCategories: getCategories } = useViewModel();
+  let categories = await getCategories();
+  let categoryNames: any = [];
+  categories.forEach((category: any) => {
+    categoryNames.push(category.name);
   });
 
-  let products = await getProducts();
-  products.results.forEach((product: any) => {
-    categoryObject.items.forEach((item: any) => {
-      item.name == product.category &&
-        item.subItems.findIndex((a: any) => a.name == product.subcategory) ==
-          -1 &&
-        item.subItems.push({ name: product.subcategory, subItems: [] });
-    });
+  const categoryObject = categories.map((category: any) => {
+    return { name: category.name, subItems: category.subcategories };
   });
 
   const accessToken = await getAccessToken(request);
@@ -41,15 +34,15 @@ export const meta: MetaFunction<typeof loader> = () => {
 
 function getSidebarItems(categoryObject: any): any[] {
   const sidebar = categoryObject;
-  return sidebar.items.map((item: any) => {
+  return sidebar.map((item: any) => {
     return {
       key: item.name,
       icon: React.createElement(NotificationOutlined),
       label: capitalizeFirstLetter(item.name),
       children: item.subItems.map((subItem: any) => {
         return {
-          key: subItem?.name?.replace(/\s+/g, "-").toLowerCase(),
-          label: capitalizeFirstLetter(subItem?.name),
+          key: subItem?.replace(/\s+/g, "-").toLowerCase(),
+          label: capitalizeFirstLetter(subItem),
         };
       }),
     };

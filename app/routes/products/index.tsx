@@ -4,9 +4,9 @@ import ProductsView from "~/views/ProductsPage/view";
 import useViewModel from "~/views/ProductsPage/viewModel";
 
 export let loader: LoaderFunction = async () => {
-  const { getProducts, getCategoryNames } = useViewModel();
+  const { getProducts, getCategories } = useViewModel();
   let products = await getProducts();
-  let categoryNames = await getCategoryNames();
+  let categoryNames = await getCategories();
   return { products, categoryNames };
 };
 
