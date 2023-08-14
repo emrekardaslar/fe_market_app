@@ -14,7 +14,7 @@ export default function ProductViewModel() {
 
   async function getProduct(id: string) {
     const response = await getProductWithId(id);
-    return response.results[0];
+    return response;
   }
 
   async function getComments(id: number) {

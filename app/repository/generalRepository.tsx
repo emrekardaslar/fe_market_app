@@ -35,10 +35,6 @@ export async function getProductsWithSubCategoryRepo(subcategory: string) {
 
 export async function getProductWithId(id: string) {
   const API_BASE_URL = getEnvVariable("API_URL");
-  const res = await axios.get(API_BASE_URL + "/product", {
-    params: {
-      id: id,
-    },
-  });
+  const res = await axios.get(API_BASE_URL + `/product/${id}`);
   return res.data;
 }
