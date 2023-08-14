@@ -34,7 +34,7 @@ export default function ProductsViewModel() {
   }
 
   function navigateToProductFromSubCategory(product: any, navigate: any) {
-    navigate(`${product.subcategory}/${product.id}`);
+    navigate(`${product.subcategory_name}/${product.id}`.toLowerCase());
   }
 
   function getObject(products: any, names: any) {
