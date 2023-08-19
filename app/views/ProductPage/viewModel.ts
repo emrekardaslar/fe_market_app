@@ -24,7 +24,7 @@ export default function ProductViewModel() {
 
   async function getRating(id: number, isLoggedIn: boolean) {
     const response = await getProductRating(id, isLoggedIn);
-    return response.data.results;
+    return response.data;
   }
 
   async function createComment(id: number, content: any, userId: number) {
