@@ -6,6 +6,7 @@ import {
   getProductComments,
   getProductRating,
   giveProductRating,
+  searchProduct,
 } from "~/repository/productRepository";
 import useFavoriteViewModel from "../FavoritesPage/viewModel";
 
@@ -92,6 +93,11 @@ export default function ProductViewModel() {
     return result;
   };
 
+  const search = async (input: string) => {
+    const response = await searchProduct(input);
+    return response.data.results;
+  };
+
   return {
     getComments,
     getRating,
@@ -103,5 +109,6 @@ export default function ProductViewModel() {
     isFavorited,
     getUserId,
     editComment,
+    search,
   };
 }

@@ -14,6 +14,7 @@ import { CartProvider } from "./context/CartContext";
 import { getEnv } from "./env.server";
 import headerItems from "./mock/headerItems";
 import { checkJwtExpire, getAccessToken, getHeaderItems } from "./utils/helper";
+import styles from "./styles/style.css";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -26,6 +27,10 @@ export function links() {
     {
       rel: "stylesheet",
       href: "https://cdn.jsdelivr.net/npm/antd@4.21.6/dist/antd.css",
+    },
+    {
+      rel: "stylesheet",
+      href: styles,
     },
   ];
 }
