@@ -80,3 +80,7 @@ export async function editCommentWithId(
     options
   );
 }
+
+export async function searchProduct(input: string) {
+  return axios.get(API_BASE_URL + `/product/?search=${input}`);
+}

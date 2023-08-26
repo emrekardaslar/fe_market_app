@@ -1,0 +1,13 @@
+.header {
+  display: flex;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  flex-grow: 8;
+}
+
+.menu {
+  flex-grow: 1;
+}
