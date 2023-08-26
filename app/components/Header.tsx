@@ -1,10 +1,9 @@
 import { useNavigate, useSubmit } from "@remix-run/react";
-import { Menu } from "antd";
+import { AutoComplete, Menu } from "antd";
 import { Header } from "antd/lib/layout/layout";
 import { ItemType } from "antd/lib/menu/hooks/useItems";
 import { useState } from "react";
 import { Input } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
 import useViewModel from "../views/ProductPage/viewModel";
 interface Props {
   items: ItemType[];
@@ -44,6 +43,7 @@ function HeaderC(props: Props) {
     });
     window.location.href = "/login";
   }
+  const [searchResults, setSearchResults] = useState([]);
 
   return (
     <Header className="header">
@@ -63,18 +63,31 @@ function HeaderC(props: Props) {
         />
       </div>
       <div className="search-bar">
-        <Input
-          placeholder="Search..."
-          prefix={<SearchOutlined />}
-          // Add any additional props or event handlers you need
-          onChange={(event) => {
-            if (event.target.value.length > 2) {
-              search(event.target.value).then((res) => {
-                console.log(res);
+        <AutoComplete
+          onChange={(value) => {
+            if (value.length > 2) {
+              search(value).then((res) => {
+                setSearchResults(res); // Update search results
               });
+            } else {
+              setSearchResults([]); // Clear search results if search term is short
             }
           }}
-        />
+          options={searchResults.map((result) => ({ value: result.name }))}
+          onSelect={(value: any, option: any) => {
+            const selectedResult = searchResults.find(
+              (result) => result.name === value
+            );
+            if (selectedResult) {
+              const { category_name, subcategory_name, id } = selectedResult;
+              const productPath = `/products/${category_name.toLowerCase()}/${subcategory_name.toLowerCase()}/${id}`;
+              //navigate(productPath);
+              window.location.href = productPath;
+            }
+          }}
+        >
+          <Input.Search size="large" placeholder="Search" enterButton />
+        </AutoComplete>
       </div>
     </Header>
   );
