@@ -60,6 +60,18 @@ function ProductPage({
   }, []);
 
   const updateRating = async (val: number) => {
+    //show notification if not logged in
+    if (!isLoggedIn) {
+      notification.open({
+        message: "Login Needed",
+        description: "You need to login to give rating. Click to login.",
+        onClick: () => {
+          window.location.href = "/login";
+        },
+      });
+      return;
+    }
+
     await giveRating(product.id, val, existingRatingId);
     setValue(val);
   };
