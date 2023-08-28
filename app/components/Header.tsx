@@ -85,6 +85,14 @@ function HeaderC(props: Props) {
               window.location.href = productPath;
             }
           }}
+          onKeyDown={(e) => {
+            if (
+              (e.code === "Enter" || e.code == "NumpadEnter") &&
+              e.target.value
+            ) {
+              window.location.href = `/search/?q=${e.target.value}`;
+            }
+          }}
         >
           <Input.Search size="large" placeholder="Search" enterButton />
         </AutoComplete>
