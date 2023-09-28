@@ -1,10 +1,11 @@
 import { ReactNode, createContext, useContext, useReducer } from "react";
-import { UPDATE_CATEGORY } from "~/actions/filterActions";
+import { UPDATE_CATEGORY, UPDATE_PRICE } from "~/actions/filterActions";
 import { filterReducer } from "~/reducers/filterReducer";
 import useViewModel from "app/views/ProductsPage/viewModel";
 
 type FilterContext = {
   updateCategory: (ctName: string) => void;
+  updatePrice: (price__gte: number, price__lte: number) => void;
 };
 
 const FilterContext = createContext({} as FilterContext);
@@ -20,11 +21,23 @@ export function FilterProvider({ children }: FilterProviderProps) {
   function updateCategory(ctName: string) {
     getFilteredData(
       {
-        ...state,
+        ...state.pageParams,
         ctName,
         page: 1,
       },
       UPDATE_CATEGORY
+    );
+  }
+
+  function updatePrice(price__gte: number, price__lte: number) {
+    getFilteredData(
+      {
+        ...state.pageParams,
+        price__gte,
+        price__lte,
+        page: 1,
+      },
+      UPDATE_PRICE
     );
   }
 
@@ -40,6 +53,7 @@ export function FilterProvider({ children }: FilterProviderProps) {
       value={{
         ...state,
         updateCategory,
+        updatePrice,
       }}
     >
       {children}
