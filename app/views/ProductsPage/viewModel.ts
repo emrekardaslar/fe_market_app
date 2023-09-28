@@ -1,9 +1,11 @@
+import { Filters } from "~/models/filter";
 import {
   getProductsRepo,
   getCategoriesRepo,
   getProductWithCategoryRepo,
   getProductWithId,
   getProductsWithSubCategoryRepo,
+  getFilterData,
 } from "~/repository/generalRepository";
 
 export default function ProductsViewModel() {
@@ -25,6 +27,10 @@ export default function ProductsViewModel() {
 
   async function getProduct(id: string) {
     return await getProductWithId(id);
+  }
+
+  async function getProductWithFilter(params: Filters) {
+    return await getFilterData(params);
   }
 
   function navigateToProduct(product: any, navigate: any) {
@@ -57,5 +63,6 @@ export default function ProductsViewModel() {
     navigateToProduct,
     navigateToProductFromSubCategory,
     getProductsWithSubCategory,
+    getProductWithFilter,
   };
 }
