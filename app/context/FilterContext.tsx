@@ -6,6 +6,7 @@ import useViewModel from "app/views/ProductsPage/viewModel";
 type FilterContext = {
   updateCategory: (ctName: string) => void;
   updatePrice: (price__gte: number, price__lte: number) => void;
+  apiResponse: any;
 };
 
 const FilterContext = createContext({} as FilterContext);
@@ -14,9 +15,11 @@ type FilterProviderProps = {
   children: ReactNode;
 };
 
-export function FilterProvider({ children }: FilterProviderProps) {
-  const initialValue: any[] = [];
-  const [state, dispatch] = useReducer(filterReducer, initialValue);
+export function FilterProvider({
+  children,
+  initialValue,
+}: FilterProviderProps) {
+  const [state, dispatch] = useReducer(filterReducer, { ...initialValue });
 
   function updateCategory(ctName: string) {
     getFilteredData(
@@ -44,7 +47,7 @@ export function FilterProvider({ children }: FilterProviderProps) {
   function getFilteredData(pageParams: any, actionType: string) {
     const { getProductWithFilter } = useViewModel();
     getProductWithFilter(pageParams).then((res) => {
-      dispatch({ type: actionType, pageParams });
+      dispatch({ type: actionType, pageParams, response: res.data.results });
     });
   }
 

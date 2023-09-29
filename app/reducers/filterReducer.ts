@@ -7,6 +7,7 @@ export function filterReducer(state, action) {
       ...state.pageParams,
       ...action.pageParams,
     },
+    apiResponse: action.response,
   };
 
   switch (action.type) {
