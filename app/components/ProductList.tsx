@@ -1,7 +1,7 @@
-import { Hpl } from "emrekardaslar-uikit";
 import useViewModel from "../views/ProductsPage/viewModel";
 import { useFilterContext } from "~/context/FilterContext";
 import { useNavigate } from "@remix-run/react";
+import { Hpl } from "./UI/HorizontalPl";
 
 function ProductList({ keys }: any) {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ function ProductList({ keys }: any) {
   let productsObject = getObject(apiResponse, keys);
 
   return (
-    <>
+    <div className="product-list">
       {keys?.map((key: string) => (
         <>
           {productsObject[key].length > 0 ? (
@@ -29,6 +29,7 @@ function ProductList({ keys }: any) {
                 products={productsObject[key]}
                 onClick={(product) => navigateToProduct(product, navigate)}
                 button={true}
+                base="products"
               />
             </>
           ) : (
@@ -36,7 +37,7 @@ function ProductList({ keys }: any) {
           )}
         </>
       ))}
-    </>
+    </div>
   );
 }
 

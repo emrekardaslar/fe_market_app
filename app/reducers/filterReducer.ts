@@ -1,4 +1,8 @@
-import { UPDATE_CATEGORY, UPDATE_PRICE } from "~/actions/filterActions";
+import {
+  CLEAR_FILTERS,
+  UPDATE_CATEGORY,
+  UPDATE_PRICE,
+} from "~/actions/filterActions";
 
 export function filterReducer(state, action) {
   const newState = {
@@ -15,6 +19,9 @@ export function filterReducer(state, action) {
       return newState;
     }
     case UPDATE_PRICE: {
+      return newState;
+    }
+    case CLEAR_FILTERS: {
       return newState;
     }
     default: {

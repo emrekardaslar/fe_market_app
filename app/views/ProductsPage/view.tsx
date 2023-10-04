@@ -8,8 +8,10 @@ function ProductsView({ data }: any) {
   return (
     <>
       <FilterProvider initialValue={{ apiResponse: data.products.results }}>
-        <FilterComponent categoryNames={keys} />
-        <ProductList keys={keys} />
+        <div className="main-container ">
+          <FilterComponent categoryNames={keys} />
+          <ProductList keys={keys} />
+        </div>
       </FilterProvider>
     </>
   );

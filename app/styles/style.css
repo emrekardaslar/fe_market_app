@@ -11,3 +11,237 @@
 .menu {
   flex-grow: 1;
 }
+
+body {
+  font: 14px/1.42857143 "Roboto", "Helvetica Neue", sans-serif;
+}
+.hpl-container {
+  width: 1000px;
+  height: 300px;
+  display: flex;
+  flex-direction: row;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+.hpl-container::-webkit-scrollbar {
+  display: none;
+}
+
+.hpl-card {
+  width: 100%;
+  height: auto;
+  border: solid white;
+  margin: 5px;
+  border-radius: 10px;
+  background-color: white;
+  min-width: 180px;
+  max-width: 213px;
+  cursor: pointer;
+}
+
+.hpl-image {
+  position: relative;
+  height: 60%;
+  /* overflow: hidden; */
+}
+
+.hpl-image img {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  object-fit: scale-down;
+}
+
+.hpl-desc {
+  width: 100%;
+  height: 20%;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hpl-price {
+  width: 100%;
+  height: auto;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.hpl {
+  position: relative;
+  display: block;
+  width: 1050px;
+  height: 300px;
+  padding: 1px;
+}
+
+.hpl .scrollRightbtn {
+  position: absolute;
+  margin-top: -150px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background: white;
+  font-size: 16px;
+  padding: -56px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  border-radius: 60%;
+  box-shadow: 0 0 5px rgb(165 168 176 / 40%);
+  font-weight: bold;
+}
+
+.hpl .scrollLeftBtn {
+  position: absolute;
+  margin-top: -150px;
+  float: left;
+  width: 40px;
+  height: 40px;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background: white;
+  font-size: 16px;
+  padding: -56px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  border-radius: 60%;
+  box-shadow: 0 0 5px rgb(165 168 176 / 40%);
+  font-weight: bold;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
+  padding: 16px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.modal-close {
+  border: none;
+  background-color: transparent;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.modal-prev,
+.modal-next {
+  background-color: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+}
+
+.modal-prev {
+  margin-right: 16px;
+}
+
+.modal-next {
+  margin-left: 16px;
+}
+
+/* FilterSidebar.css */
+.filter-sidebar {
+  width: 250px;
+  height: 100%;
+  background-color: #fff; /* Change this to your desired background color */
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+.price-filters label,
+.category-filters label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.price-filters input,
+.category-filters input,
+.price-filters button,
+.category-filters button {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.price-filters button,
+.category-filters button {
+  background-color: #007bff; /* Change button color as needed */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.price-filters button:hover,
+.category-filters button:hover {
+  background-color: #0056b3; /* Change button hover color */
+}
+
+.clear-filters-button {
+  background-color: #ff5722; /* Change clear button color */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.clear-filters-button:hover {
+  background-color: #d84315; /* Change clear button hover color */
+}
+
+.main-container {
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1rem;
+}
+
+.product-list {
+  flex: 1;
+  margin-left: 1rem;
+}

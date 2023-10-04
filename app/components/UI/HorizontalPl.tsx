@@ -13,6 +13,7 @@ interface HplProps {
   products: Product[];
   base: string;
   button: boolean;
+  onClick: (product: any) => void;
 }
 
 export const Hpl: FC<HplProps> = ({ products, base, button = false }) => {
@@ -32,8 +33,8 @@ export const Hpl: FC<HplProps> = ({ products, base, button = false }) => {
                 prefetch="intent"
                 to={
                   base == "products"
-                    ? `${product.category}/${product.subCategory}/${product.id}`
-                    : `${product.subCategory}/${product.id}`
+                    ? `${product.category_name}/${product.subcategory_name}/${product.id}`
+                    : `${product.subcategory_name}/${product.id}`
                 }
               >
                 <img src={product.imgLink} alt={product.description} />

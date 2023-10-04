@@ -1,6 +1,6 @@
 import { LoaderFunction } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { Hpl } from "emrekardaslar-uikit";
+import { Hpl } from "~/components/UI/HorizontalPl";
 import useViewModel from "~/views/ProductsPage/viewModel";
 
 export let loader: LoaderFunction = async ({ params }) => {
@@ -33,6 +33,7 @@ function Category() {
           navigateToProductFromSubCategory(product, navigate)
         }
         button={true}
+        base="category"
       />
     </>
   );
