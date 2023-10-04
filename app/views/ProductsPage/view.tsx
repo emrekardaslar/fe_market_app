@@ -10,7 +10,7 @@ function ProductsView({ data }: any) {
       <FilterProvider initialValue={{ apiResponse: data.products.results }}>
         <div className="main-container ">
           <FilterComponent categoryNames={keys} />
-          <ProductList keys={keys} />
+          <ProductList keys={keys} base={"products"} />
         </div>
       </FilterProvider>
     </>
