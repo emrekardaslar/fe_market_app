@@ -244,4 +244,5 @@ body {
 .product-list {
   flex: 1;
   margin-left: 1rem;
+  min-width: 1050px;
 }

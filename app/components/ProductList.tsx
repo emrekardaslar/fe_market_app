@@ -11,32 +11,38 @@ function ProductList({ keys }: any) {
 
   return (
     <div className="product-list">
-      {keys?.map((key: string) => (
+      {apiResponse.length > 0 ? (
         <>
-          {productsObject[key].length > 0 ? (
+          {keys?.map((key: string) => (
             <>
-              {" "}
-              <h1
-                style={{
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  marginLeft: "0.3rem",
-                }}
-              >
-                {key}
-              </h1>
-              <Hpl
-                products={productsObject[key]}
-                onClick={(product) => navigateToProduct(product, navigate)}
-                button={true}
-                base="products"
-              />
+              {productsObject[key].length > 0 ? (
+                <>
+                  {" "}
+                  <h1
+                    style={{
+                      fontWeight: "bold",
+                      textTransform: "capitalize",
+                      marginLeft: "0.3rem",
+                    }}
+                  >
+                    {key}
+                  </h1>
+                  <Hpl
+                    products={productsObject[key]}
+                    onClick={(product) => navigateToProduct(product, navigate)}
+                    button={true}
+                    base="products"
+                  />
+                </>
+              ) : (
+                ""
+              )}
             </>
-          ) : (
-            ""
-          )}
+          ))}
         </>
-      ))}
+      ) : (
+        <p>No Products Left</p>
+      )}
     </div>
   );
 }

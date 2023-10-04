@@ -36,6 +36,21 @@ function FilterComponent({ categoryNames }: any) {
     setMinPrice("");
   };
 
+  const checkFilters = () => {
+    if (!pageParams) {
+      return false;
+    }
+    if (
+      selectedCategory == null &&
+      pageParams?.price__gte == 0 &&
+      pageParams?.price__lte == 9999999999
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   const formatPrices = (minPrice: any, maxPrice: any) => {
     const price__gte = Number(minPrice) >= 1 ? Number(minPrice) : 0;
     const price__lte =
@@ -82,11 +97,7 @@ function FilterComponent({ categoryNames }: any) {
         ))}
       </div>
       {/* Clear Button for existing filters */}
-      {(selectedCategory != null ||
-        pageParams?.price__gte != null ||
-        pageParams?.price__lte != null) && (
-        <button onClick={handleClear}>Clear Filters</button>
-      )}
+      {checkFilters() && <button onClick={handleClear}>Clear Filters</button>}
     </div>
   );
 }
