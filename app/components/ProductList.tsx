@@ -1,42 +1,49 @@
-import { Hpl } from "emrekardaslar-uikit";
 import useViewModel from "../views/ProductsPage/viewModel";
 import { useFilterContext } from "~/context/FilterContext";
 import { useNavigate } from "@remix-run/react";
+import { Hpl } from "./UI/HorizontalPl";
 
-function ProductList({ keys }: any) {
+function ProductList({ keys, base }: any) {
   const navigate = useNavigate();
   const { apiResponse } = useFilterContext();
   const { getObject, navigateToProduct } = useViewModel();
   let productsObject = getObject(apiResponse, keys);
 
   return (
-    <>
-      {keys?.map((key: string) => (
+    <div className="product-list">
+      {apiResponse?.length > 0 ? (
         <>
-          {productsObject[key].length > 0 ? (
+          {keys?.map((key: string) => (
             <>
-              {" "}
-              <h1
-                style={{
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  marginLeft: "0.3rem",
-                }}
-              >
-                {key}
-              </h1>
-              <Hpl
-                products={productsObject[key]}
-                onClick={(product) => navigateToProduct(product, navigate)}
-                button={true}
-              />
+              {productsObject[key]?.length > 0 ? (
+                <>
+                  {" "}
+                  <h1
+                    style={{
+                      fontWeight: "bold",
+                      textTransform: "capitalize",
+                      marginLeft: "0.3rem",
+                    }}
+                  >
+                    {key}
+                  </h1>
+                  <Hpl
+                    products={productsObject[key]}
+                    onClick={(product) => navigateToProduct(product, navigate)}
+                    button={true}
+                    base={base}
+                  />
+                </>
+              ) : (
+                ""
+              )}
             </>
-          ) : (
-            ""
-          )}
+          ))}
         </>
-      ))}
-    </>
+      ) : (
+        <p>No Products Left</p>
+      )}
+    </div>
   );
 }
 

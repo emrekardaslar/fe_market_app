@@ -4,7 +4,7 @@ import { getEnvVariable } from "~/utils/helper";
 
 export async function getProductsRepo() {
   const API_BASE_URL = getEnvVariable("API_URL");
-  const res = await axios.get(API_BASE_URL + "/product");
+  const res = await axios.get(API_BASE_URL + "/product/");
   return res.data;
 }
 

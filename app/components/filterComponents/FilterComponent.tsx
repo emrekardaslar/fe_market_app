@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useFilterContext } from "~/context/FilterContext";
 
 function FilterComponent({ categoryNames }: any) {
-  const { updateCategory, updatePrice } = useFilterContext();
+  const { updateCategory, updatePrice, pageParams, clearFilterData } =
+    useFilterContext();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -28,6 +29,28 @@ function FilterComponent({ categoryNames }: any) {
     updatePrice(price__gte, price__lte);
   };
 
+  const handleClear = () => {
+    clearFilterData();
+    setSelectedCategory(null);
+    setMaxPrice("");
+    setMinPrice("");
+  };
+
+  const checkFilters = () => {
+    if (!pageParams) {
+      return false;
+    }
+    if (
+      selectedCategory == null &&
+      pageParams?.price__gte == 0 &&
+      pageParams?.price__lte == 9999999999
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   const formatPrices = (minPrice: any, maxPrice: any) => {
     const price__gte = Number(minPrice) >= 1 ? Number(minPrice) : 0;
     const price__lte =
@@ -38,45 +61,44 @@ function FilterComponent({ categoryNames }: any) {
   };
 
   return (
-    <>
-      <div>
-        {/* Price Filters */}
-        <div>
-          <label>
-            Min Price:
-            <input
-              type="number"
-              value={minPrice}
-              onChange={handleMinPriceChange}
-            />
-          </label>
-          <label>
-            Max Price:
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={handleMaxPriceChange}
-            />
-          </label>
-          <button onClick={handlePriceChange}>Click</button>
-        </div>
-        {/* Categories */}
+    <div className="filter-sidebar">
+      {/* Price Filters */}
+      <div className="price-filters">
+        <label>
+          Min Price:
+          <input
+            type="number"
+            value={minPrice}
+            onChange={handleMinPriceChange}
+          />
+        </label>
+        <label>
+          Max Price:
+          <input
+            type="number"
+            value={maxPrice}
+            onChange={handleMaxPriceChange}
+          />
+        </label>
+        <button onClick={handlePriceChange}>Click</button>
+      </div>
+      {/* Categories */}
+      <div className="category-filters">
         {categoryNames.map((name: string) => (
-          <>
-            <label>
-              <input
-                type="checkbox"
-                checked={selectedCategory == name ? true : false}
-                value={name}
-                onChange={handleCategoryChange}
-              />
-              {name}
-            </label>
-            <br></br>
-          </>
+          <label key={name}>
+            <input
+              type="checkbox"
+              checked={selectedCategory === name}
+              value={name}
+              onChange={handleCategoryChange}
+            />
+            {name}
+          </label>
         ))}
       </div>
-    </>
+      {/* Clear Button for existing filters */}
+      {checkFilters() && <button onClick={handleClear}>Clear Filters</button>}
+    </div>
   );
 }
 
