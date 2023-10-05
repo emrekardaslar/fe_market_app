@@ -57,6 +57,7 @@ function Products() {
   return (
     <Layout>
       <Layout>
+        <Sidebar items={getSidebarItems(data.categoryObject)} />
         <Layout
           style={{
             padding: "0 24px 24px",
